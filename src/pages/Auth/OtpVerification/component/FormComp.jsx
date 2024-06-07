@@ -56,7 +56,7 @@ const FormComp = () => {
 
               <div className="flex items-center justify-center ">
                 <Button
-                  className=" w-[50%] bg-red-600 p-3 mt-2"
+                  className=" w-[50%] bg-green-500 p-3 mt-2"
                   onClick={()=> handleOtp(value)}
                   disabled={isLoading}
                   type="Submit"

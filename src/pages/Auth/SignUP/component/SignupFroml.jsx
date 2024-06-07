@@ -35,7 +35,7 @@ const SignupForm = () => {
         <p className="mb-3 text-sm">Your password must have at least 6 characters</p>
         <p className="float-right -mt-8 me-2">show</p>
         <div className="flex items-center justify-center ">
-          <Button className=' w-full bg-red-600 p-3' disabled={isLoading} type="Submit">
+          <Button className=' w-full bg-green-400 p-3' disabled={isLoading} type="Submit">
             {isLoading ? "loading..." : "Sign Up"}
           </Button>
         </div>
@@ -54,7 +54,7 @@ const SignupForm = () => {
     </div>
     <div className="flex items-center justify-center mt-4">
       <p>Already have an Account?</p>
-      <Link className="text-red-600 font-bold cursor-pointer" to={"/login"}>Login</Link>
+      <Link className="text-green-600 font-bold cursor-pointer" to={"/login"}>Login</Link>
     </div>
           </div>
      

@@ -1,7 +1,6 @@
 import { useToast } from "@/components/ui/use-toast";
 import { publicRequest } from "@/shared/api/request";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 // import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -27,10 +26,10 @@ export const useLogIn = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
   });
-  console.log(form.formState.errors);
+  
 
   const onSubmit = async (data) => {
-    // console.log(data);
+ 
     setisLoading(true);
     try {
       const res = await publicRequest.post('/loginuser', data)
@@ -43,6 +42,7 @@ export const useLogIn = () => {
          localStorage.setItem('token', res.data.token )
  
       }
+      navigate('/')
     } catch (error) {
       console.log(error);
       toast({

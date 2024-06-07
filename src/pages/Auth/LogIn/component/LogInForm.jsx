@@ -33,11 +33,11 @@ const LogInForm = () => {
                 <p className="float-right -mt-8 me-2">show</p>
                 <div className="flex items-center justify-center ">
                   <Button
-                    className=" w-full bg-red-600 p-3"
+                    className=" w-full bg-green-400 p-3"
                     disabled={isLoading}
                     type="Submit"
                   >
-                    {isLoading ? "loading..." : "Sign Up"}
+                    {isLoading ? "loading..." : "Log In"}
                   </Button>
                 </div>
               </form>
@@ -58,7 +58,7 @@ const LogInForm = () => {
           </div>
           <div className="flex items-center justify-center mt-4">
             <p>create An Account?</p>
-            <Link className="text-red-600 font-bold cursor-pointer" to={"/"}>Sign Up</Link>
+            <Link className="text-green-600 font-bold cursor-pointer" to={"/signup"}>Sign Up</Link>
           </div>
         </div>
       </div>
