@@ -50,7 +50,7 @@ export const useGetTotalIncome = () => {
   };
 
   useEffect(() => {
-    dispatch(getCurrentUser()); // Dispatch the action to get the current user
+    dispatch(getCurrentUser( )); // Dispatch the action to get the current user
   }, [dispatch]);
 
   useEffect(() => {

@@ -93,8 +93,8 @@
 
 import { useState, useEffect } from "react";
 import { useGetTotalIncome } from "../hooks/useGetTotalIncome";
-import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import PieChart from "./PieChart";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -108,6 +108,7 @@ const MainDashboard = () => {
     if (incomeData?.month === month) {
       setMonthlyIncome(incomeData.totalIncome);
       setMonthlyExpense(expenseData?.totalExpense || 0);
+      localStorage.setItem('monthlyIncome', monthlyIncome)
       console.log(expenseData);
     } else {
       setMonthlyIncome(0.00);
@@ -128,7 +129,7 @@ const MainDashboard = () => {
       {
         label: "Income vs Expense",
         data: [monthlyIncome, monthlyExpense],
-        backgroundColor: ["#36A2EB", "#FF6384"],
+        backgroundColor: ["#3878F0", "#F06C1C"],
         hoverBackgroundColor: ["#36A2EB", "#FF6384"],
       },
     ],
@@ -209,13 +210,14 @@ const MainDashboard = () => {
         </div>
       </div>
 
-      <div className="mt-8 w-1/2 ">
+      {/* <div className="mt-8 w-1/2 ">
         <Pie data={data} options={options} className="w-[200px] mx-auto" />
         <div className="mt-4 text-center">
           <p className="text-lg text-gray-700">Monthly Income is <strong>{incomeRate}%</strong> of the total.</p>
           <p className="text-lg text-gray-700">Monthly Expense is <strong>{expenseRate}%</strong> of the total.</p>
         </div>
-      </div>
+      </div> */}
+      <PieChart data={data} incomeRate={incomeRate} expenseRate={expenseRate} />
     </div>
   );
 }
