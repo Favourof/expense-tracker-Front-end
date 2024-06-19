@@ -3,12 +3,11 @@ import LoginPage from "@/pages/Auth/LogIn";
 import HomePage from "@/pages/HomePAge";
 import { createBrowserRouter } from "react-router-dom";
 import OtpVerification from "@/pages/Auth/OtpVerification";
-// import DashBorad from "@/pages/DashBoard";
-// import Home from "@/pages/DashBoard/Component/Home";
 import DashBoardRoute from "./DashBoardRoute";
 import MainDashboard from "@/pages/DashBoard/Component/MainDashboard";
-import About from "@/pages/DashBoard/Component/About";
 import AllIcome from "@/pages/DashBoard/Component/AllIcome";
+import Review from "@/pages/DashBoard/Component/Review";
+import AddExpense from "@/pages/DashBoard/Component/AddExpense";
 
 export const route = createBrowserRouter([
   {
@@ -36,12 +35,16 @@ export const route = createBrowserRouter([
         element: <MainDashboard />
       },
       {
-        path: "home",
+        path: "income",
         element: <AllIcome />
       },
       {
-        path: "about",
-        element: <About />
+        path: "review",
+        element: <Review />
+      },
+      {
+        path: 'addExpense',
+        element: <AddExpense />
       }
     ]
   }

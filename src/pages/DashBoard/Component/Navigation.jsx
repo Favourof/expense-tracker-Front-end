@@ -10,9 +10,9 @@ import { getCurrentUser } from "@/features/AuthPage/AuthSlice";
 
 const navItems = [
   { name: 'Dashboard', path: '/dashboard', icon: <MdDashboard className="h-6 w-6 text-white" /> },
-  { name: 'Income', path: 'home', icon: <MdOutlineInsights className="h-6 w-6 text-white" /> },
-  { name: 'About', path: 'about', icon: <FaInfoCircle className="h-6 w-6 text-white" /> },
-  { name: 'Contact', path: 'contact', icon: <FaEnvelope className="h-6 w-6 text-white" /> },
+  { name: 'Income', path: 'income', icon: <MdOutlineInsights className="h-6 w-6 text-white" /> },
+  { name: 'Review', path: 'review', icon: <FaInfoCircle className="h-6 w-6 text-white" /> },
+  { name: 'Expense', path: 'AddExpense', icon: <FaEnvelope className="h-6 w-6 text-white" /> },
 ];
 
 const Navigation = () => {

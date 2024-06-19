@@ -46,7 +46,7 @@ const AnimatedForm = () => {
         console.log(error);
         toast({
           title: "Hello",
-          description: error.response.data.message,
+          description: error.message,
         });
     }finally{
       setisLoading(false);
