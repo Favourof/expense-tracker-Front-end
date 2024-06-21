@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { publicRequest } from "@/shared/api/request";
+import { toast } from "@/components/ui/use-toast";
 
 export const useAddExpense = () => {
   const [userId, setUserId] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [isloading, setIsloading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
@@ -16,7 +17,7 @@ export const useAddExpense = () => {
 
   const getCategories = async (storedUserId) => {
     try {
-      setIsloading(true);
+      setIsLoading(true);
       const response = await publicRequest.get(`/expense/all/${storedUserId}`);
       if (response) {
         const fetchedCategories = response.data.expenses.flatMap(expense => expense.categories);
@@ -25,7 +26,7 @@ export const useAddExpense = () => {
     } catch (error) {
       console.error('Failed to fetch categories:', error);
     } finally {
-      setIsloading(false);
+      setIsLoading(false);
     }
   };
 
@@ -38,7 +39,7 @@ export const useAddExpense = () => {
     };
 
     try {
-      setIsloading(true);
+      setIsLoading(true);
       if (userId) {
         const response = await publicRequest.post(`/expense/add`, {
           userId,
@@ -53,34 +54,43 @@ export const useAddExpense = () => {
     } catch (error) {
       console.error("Failed to add category:", error);
     } finally {
-      setIsloading(false);
+      setIsLoading(false);
     }
   };
 
   const handleAddSubCategory = async (category, subCategory) => {
     try {
-      setIsloading(true);
-      const updatedCategories = categories.map(cat => {
-        if (cat.name === category.name) {
-          return { ...cat, subCategories: [...cat.subCategories, subCategory] };
-        }
-        return cat;
-      });
-
-      const response = await publicRequest.post(`/expense/update`, {
+      setIsLoading(true);
+      const response = await publicRequest.post(`/expense/subcategory/add`, {
         userId,
-        categories: updatedCategories
+        categoryName: category.name,
+        subCategory,
       });
 
       if (response.status === 200) {
-        setCategories(updatedCategories);
+        await getCategories(userId);
+        toast({
+          title: 'succefully Added',
+          description: response.message
+        })
+        console.log('success')
+      } else {
+        console.error('Failed to add subcategory:', response.data.message);
+        toast({
+          title: 'Error',
+          description: response.data.message
+        })
       }
     } catch (error) {
       console.error('Failed to add subcategory:', error);
+      toast({
+        title: 'Error',
+        description: error.message
+      })
     } finally {
-      setIsloading(false);
+      setIsLoading(false);
     }
   };
 
-  return { handleAddCategory, handleAddSubCategory, categories, getCategories, isloading };
+  return { handleAddCategory, handleAddSubCategory, categories, getCategories, isLoading };
 };

@@ -13,6 +13,7 @@ const AddSubCategoryForm = ({ category, onAddSubCategory, onClose }) => {
     setAmount('');
     setDescription('');
     onClose();
+    console.log(amount, subCategoryName, description, 'here we are')
   };
 
   return (
