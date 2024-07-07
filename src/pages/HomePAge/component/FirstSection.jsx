@@ -25,6 +25,8 @@ const CurrentUserComponent = () => {
         });
         navigate("/login");
       }, 20000);
+    }else{
+      navigate('/dashboard')
     }
     return () => clearTimeout(timer);
   }, [currentUser, navigate]);

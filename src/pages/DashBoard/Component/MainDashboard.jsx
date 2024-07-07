@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useGetTotalIncome } from "../hooks/useGetTotalIncome";
+import useCurrencyConverter from "../hooks/useCurrencyConverter"; // Import the hook
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import PieChart from "./PieChart";
 
@@ -9,7 +10,15 @@ const MainDashboard = () => {
   const [monthlyIncome, setMonthlyIncome] = useState(0.00);
   const [monthlyExpense, setMonthlyExpense] = useState(0.00);
 
-  const { month, incomeData, expenseData, handleCurrencyChange, currency } = useGetTotalIncome();
+  const { 
+    month, 
+    incomeData, 
+    expenseData, 
+    handleCurrencyChange, 
+    currency 
+  } = useGetTotalIncome();
+
+  const conversionRate = useCurrencyConverter(currency); // Use the hook
 
   useEffect(() => {
     if (incomeData?.month === month) {
@@ -17,19 +26,17 @@ const MainDashboard = () => {
       setMonthlyExpense(expenseData?.totalExpense || 0);
       localStorage.setItem('monthlyIncome', incomeData.totalIncome);
       localStorage.setItem('monthlyExpense', expenseData?.totalExpense || 0);
-
-      console.log(expenseData);
     } else {
       setMonthlyIncome(0.00);
       setMonthlyExpense(0.00);
-    }
+    } 
   }, [incomeData, month]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currency,
-    }).format(amount);
+    }).format(amount * conversionRate);
   };
 
   const savingRate = (monthlyIncome - monthlyExpense);
@@ -40,7 +47,7 @@ const MainDashboard = () => {
     datasets: [
       {
         label: "Income vs Expense vs Saving",
-        data: [monthlyIncome, monthlyExpense, Math.abs(savingRate)],
+        data: [monthlyIncome * conversionRate, monthlyExpense * conversionRate, Math.abs(savingRate) * conversionRate],
         backgroundColor: ["#3878F0", "#F06C1C", isDeficit ? "#FF0000" : "#4CAF50"],
         hoverBackgroundColor: ["#36A2EB", "#FF6384", isDeficit ? "#FF6347" : "#66BB6A"],
       },
@@ -92,7 +99,7 @@ const MainDashboard = () => {
           <div className="bg-gradient-to-tr from-blue-600 to-blue-400 text-white shadow-blue-500/40 shadow-lg absolute -mt-4 mx-4 rounded-xl overflow-hidden grid h-16 w-16 place-items-center">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="w-6 h-6 text-white">
               <path fillRule="evenodd" d="M1.5 4.875C1.5 3.839 2.34 3 3.375 3h17.25c1.035 0 1.875.84 1.875 1.875v9.75c0 1.036-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 011.5 14.625v-9.75zM8.25 9.75a3.75 3.75 0 117.5 0 3.75 3.75 0 01-7.5 0zM18.75 9a.75.75 0 00-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 00.75-.75V9.75a.75.75 0 00-.75-.75h-.008zM4.5 9.75A.75.75 0 015.25 9h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H5.25a.75.75 0 01-.75-.75V9.75z" clipRule="evenodd"></path>
-              <path d="M2.25 18a.75.75 0 000 1.5c5.4 0 10.63.722 15.6 2.075 1.19.324 2.4-.558 2.4-1.82V18.75a.75.75 0 00-.75-.75H2.25z"></path>
+              <path d="M2.25 18a.75.75 0 000 1.5c5.4 0 10.63.722 15.6 2.04a.75.75 0 10.39-1.45A53.224 53.224 0 002.25 18z" />
             </svg>
           </div>
           <div className="p-4 text-right">
@@ -101,14 +108,14 @@ const MainDashboard = () => {
           </div>
           <div className="border-t border-blue-gray-50 p-4">
             <p className="text-base text-blue-gray-600">
-              <strong className="text-green-500">+55%</strong>&nbsp;than last week
+              <strong className="text-green-500">+10%</strong>&nbsp;than last week
             </p>
           </div>
         </div>
         <div className="relative flex flex-col bg-white text-gray-700 shadow-md rounded-xl">
           <div className="bg-gradient-to-tr from-orange-600 to-orange-400 text-white shadow-orange-500/40 shadow-lg absolute -mt-4 mx-4 rounded-xl overflow-hidden grid h-16 w-16 place-items-center">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="w-6 h-6 text-white">
-              <path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75zM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 01-1.875-1.875V8.625zM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 013 19.875v-6.75z"></path>
+              <path fillRule="evenodd" d="M7.125 1.5A2.625 2.625 0 004.5 4.125v15.75A2.625 2.625 0 007.125 22.5h9.75a2.625 2.625 0 002.625-2.625V4.125A2.625 2.625 0 0016.875 1.5h-9.75zm2.625 3a.75.75 0 01.75-.75h3a.75.75 0 010 1.5h-3a.75.75 0 01-.75-.75zm-.25 11.625c0-.414.336-.75.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75zm-.75-4.875a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75z" clipRule="evenodd"></path>
             </svg>
           </div>
           <div className="p-4 text-right">
@@ -140,6 +147,7 @@ const MainDashboard = () => {
       </div>
 
       <div className="mt-8 shadow-lg rounded-md p-4">
+        <p className="font-bold text-2xl text-gray-500">Pie chart</p>
         <PieChart data={data} options={options} incomeRate={incomeRate} expenseRate={expenseRate} savingRatePercentage={savingRatePercentage} />
       </div>
     </div>

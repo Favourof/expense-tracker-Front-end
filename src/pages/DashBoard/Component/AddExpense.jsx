@@ -4,8 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAddExpense } from '../hooks/useAddExpense';
 import Loader from './Loader';
 import AddSubCategoryForm from './AddSubCategoryForm';
+import { GiExpense } from "react-icons/gi";
 
-const iconArray = [FaTshirt, FaAppleAlt, FaCar, FaHome, FaShoppingCart, FaQuestion];
+const iconArray = [GiExpense];
 const colors = ["bg-red-500", "bg-orange-500", "bg-yellow-500", "bg-lime-500", "bg-teal-500", "bg-indigo-500"];
 const shadows = ["shadow-red-200", "shadow-orange-200", "shadow-yellow-200", "shadow-lime-200", "shadow-teal-200", "shadow-indigo-200"];
 

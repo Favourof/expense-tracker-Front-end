@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { FaHome, FaEnvelope, FaInfoCircle, FaBars } from 'react-icons/fa';
 import { MdDashboard, MdOutlineInsights } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
+import { GiExpense } from "react-icons/gi";
 
 import { getCurrentUser } from "@/features/AuthPage/AuthSlice";
 
@@ -11,8 +12,9 @@ import { getCurrentUser } from "@/features/AuthPage/AuthSlice";
 const navItems = [
   { name: 'Dashboard', path: '/dashboard', icon: <MdDashboard className="h-6 w-6 text-white" /> },
   { name: 'Income', path: 'income', icon: <MdOutlineInsights className="h-6 w-6 text-white" /> },
-  { name: 'Review', path: 'review', icon: <FaInfoCircle className="h-6 w-6 text-white" /> },
   { name: 'Expense', path: 'AddExpense', icon: <FaEnvelope className="h-6 w-6 text-white" /> },
+  { name: 'My Expense', path: 'myExpense', icon: <GiExpense className="h-6 w-6 text-white" /> },
+  { name: 'Review', path: 'review', icon: <FaInfoCircle className="h-6 w-6 text-white" /> }
 ];
 
 const Navigation = () => {

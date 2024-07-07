@@ -6,28 +6,56 @@ import { publicRequest } from "@/shared/api/request";
 export const useGetAllIncome = () => {
   const [allIncome, setAllIncome] = useState([]);
   const dispatch = useDispatch();
+  const [weeklyIncome, setWeeklyIncome] = useState([]);
   const { currentUser } = useSelector((state) => state.auth);
-  const [weeklyIncomes, setWeeklyIncomes] = useState([0, 0, 0, 0, 0]); // Assuming maximum 5 weeks in a month
+  
+  const [isloading, setisloading] = useState(false);
 
   const handleGetAllIncome = async () => {
+    setisloading(true)
     try {
       if (currentUser) {
         const response = await publicRequest.get(`/income/${currentUser._id}`);
         if (response && response.data) {
           setAllIncome(response.data);
-          const weeklyIncomeTemp = [0, 0, 0, 0, 0]; // Temporary array for weekly incomes
-          response.data.forEach((income) => {
-            const week = income.weekOfMonth;
-            if (week > 0 && week <= 5) {
-              weeklyIncomeTemp[week - 1] += income.amount;
-            }
-          });
-          setWeeklyIncomes(weeklyIncomeTemp);
+          const income = response.data;
+          const recentMonthIncome = filterRecentMonthIncome(income);
+          // setAllIncome(recentMonthIncome);
+          setWeeklyIncome(processWeeklyIncome(recentMonthIncome));
+         
         }
       }
     } catch (error) {
       console.log(error);
+    }finally{
+      setisloading(false)
     }
+  };
+
+  const filterRecentMonthIncome = (income) => {
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+    return income.filter(item => {
+      const incomeDate = new Date(item.date);
+      return incomeDate >= startOfMonth && incomeDate <= endOfMonth;
+    });
+  };
+
+  const processWeeklyIncome = (income) => {
+    const weeks = Array.from({ length: 5 }, () => 0); // Initialize 5 weeks with 0
+
+    income.forEach(item => {
+      const incomeDate = new Date(item.date);
+      const weekNumber = Math.ceil(incomeDate.getDate() / 7) - 1; // Determine the week number (0-based)
+      weeks[weekNumber] += item.amount;
+    });
+
+    return weeks.map((amount, index) => ({
+      week: `Week ${index + 1}`,
+      amount,
+    }));
   };
 
   useEffect(() => {
@@ -40,5 +68,5 @@ export const useGetAllIncome = () => {
     }
   }, [currentUser]);
 
-  return { allIncome, handleGetAllIncome, weeklyIncomes };
+  return { allIncome, handleGetAllIncome, weeklyIncome,  isloading };
 };

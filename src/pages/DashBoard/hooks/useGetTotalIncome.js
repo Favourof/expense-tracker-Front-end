@@ -10,8 +10,8 @@ export const useGetTotalIncome = () => {
   const { currentUser, incomeData, expenseData } = useSelector((state) => state.auth);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-    
-
+  const [recentCovert, setrecentCovert] = useState();
+    // console.log(incomeData)
   const handleStartDateChange = (date) => {
     setStartDate(date);
   };
@@ -20,7 +20,6 @@ export const useGetTotalIncome = () => {
     setEndDate(date);
   };
 
- 
   const formatDate = (date) => {
     const incomeDate = new Date(date);
     const now = new Date();
@@ -47,22 +46,38 @@ export const useGetTotalIncome = () => {
 
   const handleCurrencyChange = (e) => {
     setCurrency(e.target.value);
+    // setrecentCovert(currency)
   };
 
   useEffect(() => {
-    dispatch(getCurrentUser( )); // Dispatch the action to get the current user
+    dispatch(getCurrentUser()); // Dispatch the action to get the current user
   }, [dispatch]);
 
   useEffect(() => {
     localStorage.setItem("currency", currency);
+    // setrecentCovert(currency)
   }, [currency]);
 
   useEffect(() => {
     if (currentUser) {
       dispatch(getTotalIncome({ userId: currentUser._id, year, month }));
-      dispatch(getTotalExpense({userId: currentUser._id, year, month}))
+      dispatch(getTotalExpense({ userId: currentUser._id, year, month }));
     }
   }, [currentUser, year, month, dispatch]);
 
-  return { month, year, currentUser, incomeData, expenseData, handleCurrencyChange, currency, formatDate, handleStartDateChange, handleEndDateChange, endDate, startDate };
+  return { 
+    month, 
+    year, 
+    currentUser, 
+    incomeData, 
+    expenseData, 
+    handleCurrencyChange, 
+    currency, 
+    formatDate, 
+    handleStartDateChange, 
+    handleEndDateChange, 
+    endDate, 
+    startDate,
+    recentCovert
+  };
 };

@@ -3,6 +3,12 @@ import { motion } from "framer-motion";
 import { publicRequest } from "@/shared/api/request";
 import { useGetAllIncome } from "../hooks/useGetAllIcome";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
 
 
 const AnimatedForm = () => {
@@ -54,16 +60,19 @@ const AnimatedForm = () => {
     // Add your form submission logic here
   };
 
-  console.log(RandomNumber);
+
 
 
 
   return (
-    <motion.div
+    <Dialog>
+  <DialogTrigger>Add Income</DialogTrigger>
+  <DialogContent>
+  <motion.div
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg relative z-10 sm:max-w-lg md:max-w-xl lg:max-w-2xl"
+      className="  mt-10 p-6 bg-white shadow-md rounded-lg relative z-10 "
     >
       <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Add Income</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -100,6 +109,10 @@ const AnimatedForm = () => {
         </motion.button>
       </form>
     </motion.div>
+  </DialogContent>
+</Dialog>
+
+ 
   );
   
 };

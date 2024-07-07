@@ -48,11 +48,22 @@ export const useAddExpense = () => {
 
         if (response.status === 201) {
           await getCategories(userId);
+
+        }else{
+          toast({
+            title : 'hello',
+            description : 'Category Already exit'
+          })
         }
-        console.log('Category added:', response.data);
+      
+        // console.log('Category added:', response.data);
       }
     } catch (error) {
-      console.error("Failed to add category:", error);
+      // console.error("Failed to add category:", error);
+      toast({
+          title : 'hello❌❌',
+          description : 'Category Added Succefully'
+      })
     } finally {
       setIsLoading(false);
     }

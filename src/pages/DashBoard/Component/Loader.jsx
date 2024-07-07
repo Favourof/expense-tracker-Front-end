@@ -7,7 +7,7 @@ const Loader = () => {
         <div className="w-4 h-4 bg-blue-500 rounded-full animate-bounce"></div>
         <div className="w-4 h-4 bg-green-500 rounded-full animate-bounce delay-200"></div>
         <div className="w-4 h-4 bg-red-500 rounded-full animate-bounce delay-400"></div>
-        <div className="w-4 h-4 bg-blue-500 rounded-full animate-bounce delay-400"></div>
+        <div className="w-4 h-4 bg-green-500 rounded-full animate-bounce delay-200"></div>
       </div>
     </div>
   );

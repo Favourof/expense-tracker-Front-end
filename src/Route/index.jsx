@@ -8,6 +8,7 @@ import MainDashboard from "@/pages/DashBoard/Component/MainDashboard";
 import AllIcome from "@/pages/DashBoard/Component/AllIcome";
 import Review from "@/pages/DashBoard/Component/Review";
 import AddExpense from "@/pages/DashBoard/Component/AddExpense";
+import MyExpense from "@/pages/DashBoard/Component/MyExpense";
 
 export const route = createBrowserRouter([
   {
@@ -45,7 +46,11 @@ export const route = createBrowserRouter([
       {
         path: 'addExpense',
         element: <AddExpense />
-      }
+      },
+      {
+        path: 'myexpense',
+        element: <MyExpense />
+      },
     ]
   }
 ]);
