@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://localhost:4002/api/v1";
+const baseURL = "https://expense-tracker-3-4g4l.onrender.com/api/v1";
 
 export const publicRequest = axios.create({
   baseURL: baseURL,
