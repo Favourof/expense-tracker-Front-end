@@ -25,8 +25,6 @@ const CurrentUserComponent = () => {
         });
         navigate("/login");
       }, 20000);
-    }else{
-      navigate('/dashboard')
     }
     return () => clearTimeout(timer);
   }, [currentUser, navigate]);
@@ -44,15 +42,13 @@ const CurrentUserComponent = () => {
 
   return (
     <div>
-      {currentUser? (
+      {/* {currentUser? (
         <div>
           <h1>Welcome, {currentUser.firstName}</h1>
-          <p>{currentUser._id}</p>
-          {/* Render more user info here */}
         </div>
       ) : (
         <div>No user data</div>
-      )}
+      )} */}
     </div>
   );
 };
