@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LabelList } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LabelList,  } from 'recharts';
 import { useGetAllIncome } from '../hooks/useGetAllIcome';
 // import { useGetAllIncome } from '../hooks/useGetAllIncome';
 
@@ -52,22 +52,24 @@ const IncomeReview = ({ startDate, endDate }) => {
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}
+             
               margin={{
                 top: 20,
                 right: 30,
                 left: 20,
                 bottom: 5,
+                
               }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
               <XAxis dataKey="name" tick={{ fill: '#555' }} />
-              <YAxis tick={{ fill: '#555' }} />
+              <YAxis tick={{ fill: '#555' }} />   
               <Tooltip contentStyle={{ backgroundColor: '#f9f9f9', border: '1px solid #ccc' }} />
               <Legend />
-              <Bar dataKey="Income" fill="#FF7F50" radius={[10, 10, 0, 0]}>
-                <LabelList dataKey="Income" position="top" style={{ fill: '#FF7F50', fontWeight: 'bold' }} />
+              <Bar   dataKey="Income" fill="#FF7F50" radius={[20, 20, 0, 0]}>
+                <LabelList dataKey="Income" position="top" style={{ fill: '#FF7F50', fontWeight: 'bold' }} /> 
               </Bar>
-              <Bar dataKey="Monthly Income" fill="#4682B4" radius={[10, 10, 0, 0]}>
+              <Bar   dataKey="Monthly Income" fill="#4682B4" radius={[10, 10, 0, 0]}>
                 <LabelList dataKey="Monthly Income" position="top" style={{ fill: '#4682B4', fontWeight: 'bold' }} />
               </Bar>
             </BarChart>
