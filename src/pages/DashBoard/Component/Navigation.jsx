@@ -50,7 +50,7 @@ const Navigation = () => {
 
   return (
     <div>
-      <div className='flex p-4 space-x-6 h-20 absolute'>
+      <div className='flex p-4 space-x-6 h-20 absolute bg-white w-[100%] shadow-lg z-50'>
         <button onClick={toggleMenu} className="text-black">
           <FaBars className="h-8 w-8" />
         </button>

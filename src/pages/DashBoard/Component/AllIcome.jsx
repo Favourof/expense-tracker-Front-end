@@ -48,8 +48,8 @@ const AllIncome = () => {
 
   return (
     <div>
-      <div className='flex justify-between gap-5 relative z-10'>
-        <h3 className="text-lg font-semibold text-gray-800">Income List</h3>
+      <div className='flex justify-between gap-5 fixed right-3 top-5 z-50'>
+     
         <Button className='bg-orange-500'>
           <AnimatedForm />
         </Button>
@@ -77,6 +77,7 @@ const AllIncome = () => {
       </div>
 
       <div className="bg-white p-6">
+      <h3 className="text-lg font-semibold text-gray-800 ">Income List</h3>
         {isLoading ? (
           <Loader />
         ) : sortedIncome.length === 0 ? (
