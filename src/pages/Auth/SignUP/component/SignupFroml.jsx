@@ -33,7 +33,6 @@ const SignupForm = () => {
           ))}
 
         <p className="mb-3 text-sm">Your password must have at least 6 characters</p>
-        <p className="float-right -mt-8 me-2">show</p>
         <div className="flex items-center justify-center ">
           <Button className=' w-full bg-green-400 p-3' disabled={isLoading} type="Submit">
             {isLoading ? "loading..." : "Sign Up"}
