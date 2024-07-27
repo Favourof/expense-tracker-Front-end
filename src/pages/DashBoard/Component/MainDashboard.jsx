@@ -29,8 +29,8 @@ const MainDashboard = () => {
     } else {
       setMonthlyIncome(0.00);
       setMonthlyExpense(0.00);
-    } 
-  }, [incomeData, month]);
+    }
+  }, [incomeData, month, expenseData]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
@@ -42,12 +42,31 @@ const MainDashboard = () => {
   const savingRate = (monthlyIncome - monthlyExpense);
   const isDeficit = savingRate < 0;
 
+  const calculateRate = () => {
+    const total = monthlyIncome + monthlyExpense;
+    if (total === 0) {
+      return { incomeRate: "No data", expenseRate: "No data", savingRatePercentage: "No data" };
+    }
+
+    const incomeRate = ((monthlyIncome / total) * 100).toFixed(2);
+    const expenseRate = ((monthlyExpense / total) * 100).toFixed(2);
+    const savingRatePercentage = ((Math.abs(savingRate) / total) * 100).toFixed(2);
+
+    return { incomeRate, expenseRate, savingRatePercentage };
+  };
+
+  const { incomeRate, expenseRate, savingRatePercentage } = calculateRate();
+
   const data = {
     labels: ["Monthly Income", "Monthly Expense", isDeficit ? "Deficit" : "Saving Rate"],
     datasets: [
       {
         label: "Income vs Expense vs Saving",
-        data: [monthlyIncome * conversionRate, monthlyExpense * conversionRate, Math.abs(savingRate) * conversionRate],
+        data: [
+          Math.max(monthlyIncome * conversionRate, 0),
+          Math.max(monthlyExpense * conversionRate, 0),
+          Math.max(Math.abs(savingRate) * conversionRate, 0)
+        ],
         backgroundColor: ["#3878F0", "#F06C1C", isDeficit ? "#FF0000" : "#4CAF50"],
         hoverBackgroundColor: ["#36A2EB", "#FF6384", isDeficit ? "#FF6347" : "#66BB6A"],
       },
@@ -62,17 +81,6 @@ const MainDashboard = () => {
       },
     },
   };
-
-  const calculateRate = () => {
-    if (monthlyIncome === 0 && monthlyExpense === 0) return { incomeRate: "No data", expenseRate: "No data", savingRatePercentage: "No data" };
-    const total = monthlyIncome + monthlyExpense + Math.abs(savingRate);
-    const incomeRate = ((monthlyIncome / total) * 100).toFixed(2);
-    const expenseRate = ((monthlyExpense / total) * 100).toFixed(2);
-    const savingRatePercentage = ((Math.abs(savingRate) / total) * 100).toFixed(2);
-    return { incomeRate, expenseRate, savingRatePercentage };
-  };
-
-  const { incomeRate, expenseRate, savingRatePercentage } = calculateRate();
 
   return (
     <div>
