@@ -70,7 +70,7 @@ const IncomeReview = ({ startDate, endDate }) => {
                 <LabelList dataKey="Income" position="top" style={{ fill: '#FF7F50', fontWeight: 'bold' }} /> 
               </Bar>
               <Bar   dataKey="Monthly Income" fill="#4682B4" radius={[10, 10, 0, 0]}>
-                <LabelList dataKey="Monthly Income" position="top" style={{ fill: '#4682B4', fontWeight: 'bold' }} />
+                {/* <LabelList dataKey="Monthly Income" position="top" style={{ fill: '#4682B4', fontWeight: 'bold' }} /> */}
               </Bar>
             </BarChart>
           </ResponsiveContainer>

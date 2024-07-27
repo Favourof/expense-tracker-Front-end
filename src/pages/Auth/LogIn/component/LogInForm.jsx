@@ -48,7 +48,7 @@ const LogInForm = () => {
             <span className=" text-gray-500">or Log In with</span>
             <div className="flex-grow border-t border-gray-300"></div>
           </div>
-          <div className="lg:flex items-center justify-center md:flex items-center justify-center  sm:flex items-center justify-center block items-center m-auto w-[80%] mt-4">
+          <div className="lg:flex  md:flex  sm:flex items-center justify-center block  m-auto w-[80%] mt-4">
             <img src={google} alt="" />
             <img
               className="lg:ps-2 md:ps-2 sm:ps-2 ps-0"

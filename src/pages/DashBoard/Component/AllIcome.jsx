@@ -6,14 +6,13 @@ import { Button } from '@/components/ui/button';
 import Loader from './Loader';
 import * as Dialog from '@radix-ui/react-dialog';
 import { motion } from 'framer-motion';
-import { useGetAllIncome } from '../hooks/useGetAllIcome';
 import { useGetTotalIncome } from '../hooks/useGetTotalIncome';
-// import { useGetTotalIncome } from '../hooks/useGetTotalIncome';
-// import { useGetAllIncome } from '../hooks/useGetAllIncome';
+import { useGetAllIncome } from '../hooks/useGetAllIcome';
+
 
 const AllIncome = () => {
   const { currency, formatDate, handleStartDateChange, handleEndDateChange, endDate, startDate } = useGetTotalIncome();
-  const { allIncome, isLoading, error } = useGetAllIncome();
+  const { allIncome, handleGetAllIncome, isLoading, error } = useGetAllIncome();
   const [monthlyIncome, setMonthlyIncome] = useState(localStorage.getItem('monthlyIncome'));
   const [convert, setConvert] = useState(localStorage.getItem('cov'));
   const [selectedIncome, setSelectedIncome] = useState(null);
@@ -48,11 +47,8 @@ const AllIncome = () => {
 
   return (
     <div>
-      <div className='flex justify-between gap-5 fixed right-3 top-5 z-50'>
-     
-        <Button className='bg-orange-500'>
-          <AnimatedForm />
-        </Button>
+      <div className='flex justify-between gap-5 fixed right-3 top-5 z-50 rounded-md  text-white bg-orange-400'>
+        <AnimatedForm onSuccess={handleGetAllIncome} />
       </div>
 
       <div className="mt-8 flex flex-col items-center space-y-4 sm:space-y-0 sm:flex-row sm:space-x-4 md:space-x-6 lg:space-x-8 relative z-0">
@@ -77,7 +73,7 @@ const AllIncome = () => {
       </div>
 
       <div className="bg-white p-6">
-      <h3 className="text-lg font-semibold text-gray-800 ">Income List</h3>
+        <h3 className="text-lg font-semibold text-gray-800 ">Income List</h3>
         {isLoading ? (
           <Loader />
         ) : sortedIncome.length === 0 ? (

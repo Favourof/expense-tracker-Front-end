@@ -71,7 +71,7 @@ const ExpenseReview = () => {
                 <LabelList dataKey="Expense" position="top" style={{ fill: '#FF7F50', fontWeight: 'bold' }} />
               </Bar>
               <Bar dataKey="Monthly Expense" fill="#4682B4" radius={[10, 10, 0, 0]}>
-                <LabelList dataKey="Monthly Expense" position="top" style={{ fill: '#4682B4', fontWeight: 'bold' }} />
+                {/* <LabelList dataKey="Monthly Expense" position="top" style={{ fill: '#4682B4', fontWeight: 'bold' }} /> */}
               </Bar>
             </BarChart>
           </ResponsiveContainer>
