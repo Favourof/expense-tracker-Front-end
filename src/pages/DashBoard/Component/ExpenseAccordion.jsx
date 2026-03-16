@@ -44,94 +44,122 @@ const ExpenseAccordion = () => {
   }
 
   return (
-    <div className="w-full">
-      {expenses.map((expense, index) => (
-        <Accordion
-          key={index}
-          expanded={expanded === `panel${index}`}
-          onChange={handleChange(`panel${index}`)}
-          className="mb-4"
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls={`panel${index}bh-content`}
-            id={`panel${index}bh-header`}
-            className="bg-green-400 p-3 rounded-md"
-          >
-            <div className="flex items-center">
-              <div className="bg-green-400 rounded-full h-10 w-10  flex items-center justify-center text-white">
-                {React.createElement(iconArray[hashStringToIndex(expense.category, iconArray.length)])}
+    <div className="w-full space-y-4">
+      {expenses.map((expense, index) => {
+        if (!expense?.categories || expense.categories.length === 0) {
+          return (
+            <div
+              key={expense._id || index}
+              className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {expense.label || expense.note || "Expense"}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    {new Intl.DateTimeFormat(undefined, {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    }).format(new Date(expense.date))}
+                  </p>
+                </div>
+                <p className="text-sm font-semibold text-orange-600">
+                  {new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: localStorage.getItem('currency'),
+                  }).format(expense.amount * localStorage.getItem('cov'))}
+                </p>
               </div>
-              <Typography className="ml-3 p-5 text-orange-600">My Expense</Typography>
             </div>
-          </AccordionSummary>
-          <AccordionDetails className="bg-gray-100 p-3 rounded-md">
-            <div className="w-full">
-              {expense.categories && expense.categories.length > 0 && expense.categories.map((category, catIndex) => (
-                <Accordion key={catIndex} className="mb-2">
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls={`panel${index}-${catIndex}bh-content`}
-                    id={`panel${index}-${catIndex}bh-header`}
-                    className="bg-gray-300 p-2 rounded-md"
-                  >
-                    <div className="flex items-center">
-                      <div className="bg-orange-400 rounded-full h-10 w-10 flex items-center justify-center text-white">
-                        {React.createElement(iconArray[hashStringToIndex(category.name, iconArray.length)])}
+          );
+        }
+
+        return (
+          <Accordion
+            key={index}
+            expanded={expanded === `panel${index}`}
+            onChange={handleChange(`panel${index}`)}
+            className="mb-4"
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`panel${index}bh-content`}
+              id={`panel${index}bh-header`}
+              className="bg-green-400 p-3 rounded-md"
+            >
+              <div className="flex items-center">
+                <div className="bg-green-400 rounded-full h-10 w-10  flex items-center justify-center text-white">
+                  {React.createElement(iconArray[hashStringToIndex(expense.category, iconArray.length)])}
+                </div>
+                <Typography className="ml-3 p-5 text-orange-600">My Expense</Typography>
+              </div>
+            </AccordionSummary>
+            <AccordionDetails className="bg-gray-100 p-3 rounded-md">
+              <div className="w-full">
+                {expense.categories && expense.categories.length > 0 && expense.categories.map((category, catIndex) => (
+                  <Accordion key={catIndex} className="mb-2">
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls={`panel${index}-${catIndex}bh-content`}
+                      id={`panel${index}-${catIndex}bh-header`}
+                      className="bg-gray-300 p-2 rounded-md"
+                    >
+                      <div className="flex items-center">
+                        <div className="bg-orange-400 rounded-full h-10 w-10 flex items-center justify-center text-white">
+                          {React.createElement(iconArray[hashStringToIndex(category.name, iconArray.length)])}
+                        </div>
+                        <Typography className="ml-2 font-bold text-5xl text-green-700 p-5">{category.name}</Typography>
                       </div>
-                      <Typography className="ml-2 font-bold text-5xl text-green-700 p-5">{category.name}</Typography>
-                    </div>
-                  </AccordionSummary>
-                  <AccordionDetails className="bg-gray-50 p-2 rounded-md">
-                    <div className="w-full">
-                      {category.subCategories && category.subCategories.length > 0 && category.subCategories
-                        .slice() // Create a copy of the array
-                        .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort by date in descending order
-                        .map((subCategory, subIndex) => (
-                          <div key={subIndex} className="mb-4 shadow-md rounded-xl p-6 hover:bg-orange-200 cursor-pointer">
-                            <div className="flex justify-between items-center">
-                              <div>
-                                <p className="text-lg font-semibold text-gray-800">{subCategory.name}</p>
-                                <p className="text-sm text-gray-600">{subCategory.description}</p>
-                                <p className="text-sm text-gray-600">
-                                  {new Intl.DateTimeFormat(undefined, {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    second: 'numeric',
-                                    hour12: true,
-                                  }).format(new Date(subCategory.date))}
-                                </p>
-                                <p className="text-sm text-red-600">
-                                  {formatDate(subCategory.date)}
-                                </p>
-                              </div>
-                              <div>
-                                <p className="text-lg font-semibold text-gray-800">
-                                  {new Intl.NumberFormat("en-US", {
-                                    style: "currency",
-                                    currency: localStorage.getItem('currency'), // Replace with your currency logic
-                                  }).format(subCategory.amount * localStorage.getItem('cov'))}
-                                </p>
-                                <div className="mt-2 w-full h-2 bg-gray-200 rounded">
-                                  {/* Optional percentage bar */}
-                                  {/* <div className="h-full bg-orange-500 rounded" style={{ width: `${percentage}%` }} />
-                                  <p className='text-sm'>{percentage.toFixed(2)}% of category</p> */}
+                    </AccordionSummary>
+                    <AccordionDetails className="bg-gray-50 p-2 rounded-md">
+                      <div className="w-full">
+                        {category.subCategories && category.subCategories.length > 0 && category.subCategories
+                          .slice()
+                          .sort((a, b) => new Date(b.date) - new Date(a.date))
+                          .map((subCategory, subIndex) => (
+                            <div key={subIndex} className="mb-4 shadow-md rounded-xl p-6 hover:bg-orange-200 cursor-pointer">
+                              <div className="flex justify-between items-center">
+                                <div>
+                                  <p className="text-lg font-semibold text-gray-800">{subCategory.name}</p>
+                                  <p className="text-sm text-gray-600">{subCategory.description}</p>
+                                  <p className="text-sm text-gray-600">
+                                    {new Intl.DateTimeFormat(undefined, {
+                                      year: 'numeric',
+                                      month: 'long',
+                                      day: 'numeric',
+                                      hour: 'numeric',
+                                      minute: 'numeric',
+                                      second: 'numeric',
+                                      hour12: true,
+                                    }).format(new Date(subCategory.date))}
+                                  </p>
+                                  <p className="text-sm text-red-600">
+                                    {formatDate(subCategory.date)}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-lg font-semibold text-gray-800">
+                                    {new Intl.NumberFormat("en-US", {
+                                      style: "currency",
+                                      currency: localStorage.getItem('currency'),
+                                    }).format(subCategory.amount * localStorage.getItem('cov'))}
+                                  </p>
+                                  <div className="mt-2 w-full h-2 bg-gray-200 rounded" />
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
-                    </div>
-                  </AccordionDetails>
-                </Accordion>
-              ))}
-            </div>
-          </AccordionDetails>
-        </Accordion>
-      ))}
+                          ))}
+                      </div>
+                    </AccordionDetails>
+                  </Accordion>
+                ))}
+              </div>
+            </AccordionDetails>
+          </Accordion>
+        );
+      })}
     </div>
   );
 };

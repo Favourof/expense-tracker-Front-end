@@ -1,19 +1,20 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './index.css'
-import { route } from './Route/index.jsx'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import { route } from "./Route/index.jsx";
 import { RouterProvider } from "react-router-dom";
-import { Toaster } from './components/ui/toaster';
+import { Toaster } from "./components/ui/toaster";
 import { Provider } from "react-redux";
 import { store } from "./store";
+import { AuthProvider } from "./context/AuthContext";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-  <div>
     <Provider store={store}>
-      <RouterProvider router={route} />
-      <Toaster />
+      <AuthProvider>
+        <RouterProvider router={route} />
+        <Toaster />
+      </AuthProvider>
     </Provider>
-  </div>
-</React.StrictMode>
-)
+  </React.StrictMode>
+);

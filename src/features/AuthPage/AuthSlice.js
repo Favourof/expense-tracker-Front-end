@@ -1,25 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { publicRequest } from "@/shared/api/request";
-
-
-let userId;
+import { apiClient } from "@/shared/api/request";
 export const getCurrentUser = createAsyncThunk(
   'auth/getCurrentUser',
   async (_, { rejectWithValue }) => {
-    const token = localStorage.getItem('token');
     try {
-      const response = await publicRequest.post(
-        'checkauth',
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+      const response = await apiClient.post('checkauth');
       if (response.data) {
-        userId = response.data;
-        localStorage.setItem('userId', response.data._id);
       }
       return response.data;
     } catch (error) {
@@ -30,9 +16,9 @@ export const getCurrentUser = createAsyncThunk(
 
 export const getTotalIncome = createAsyncThunk(
   'auth/getTotalIncome',
-  async ({ userId, year, month }, { rejectWithValue }) => {
+  async ({ year, month }, { rejectWithValue }) => {
     try {
-      const response = await publicRequest.get(`/income/summary/${userId}/${year}/${month}`);
+      const response = await apiClient.get(`/income/summary/${year}/${month}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -42,9 +28,9 @@ export const getTotalIncome = createAsyncThunk(
 
 export const getTotalExpense = createAsyncThunk(
   'auth/getTotalExpense', 
-  async({userId, year, month}, {rejectWithValue}) => {
+  async({ year, month }, {rejectWithValue}) => {
     try {
-      const response = await publicRequest.get(`/expense/monthly/${userId}/${year}/${month}`)
+      const response = await apiClient.get(`/expense/monthly/${year}/${month}`)
       return response.data
     } catch (error) {
       return rejectWithValue(error.response.data)
@@ -57,7 +43,6 @@ const authSlice = createSlice({
   initialState: {
     currentUser: null,
     status: 'idle',
-    userId,
     error: null,
     incomeData: null,
     expenseData: null,

@@ -1,17 +1,13 @@
 import { useToast } from "@/components/ui/use-toast";
-import { publicRequest } from "@/shared/api/request";
+import { useAuth } from "@/context/AuthContext";
 import { zodResolver } from "@hookform/resolvers/zod";
-// import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 const formSchema = z.object({
-  email: z
-    .string()
-    .email("Invalid email address")
-    .nonempty("Email is required"),
+  email: z.string().email("Invalid email address").nonempty("Email is required"),
   password: z
     .string()
     .min(6, "Password must be at least 6 characters")
@@ -21,33 +17,31 @@ const formSchema = z.object({
 export const useLogIn = () => {
   const [isLoading, setisLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
+  const { login } = useAuth();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
   });
-  
 
   const onSubmit = async (data) => {
- 
     setisLoading(true);
     try {
-      const res = await publicRequest.post('/loginuser', data)
+      await login(data);
       toast({
         title: "Success",
-        description: ` Log In Succesfully`,
+        description: "Log In Successfully",
       });
-      
-      if (res.data) {
-         localStorage.setItem('token', res.data.token )
- 
-      }
-      navigate('/')
+      const from = location.state?.from;
+      const destination = from
+        ? `${from.pathname || ""}${from.search || ""}${from.hash || ""}`
+        : "/dashboard";
+      navigate(destination, { replace: true });
     } catch (error) {
-      console.log(error);
       toast({
         title: "Hello",
-        description: error.response.data.message,
+        description: error?.response?.data?.message || "Login failed",
       });
     } finally {
       setisLoading(false);

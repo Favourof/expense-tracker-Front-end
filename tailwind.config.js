@@ -17,6 +17,10 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        display: ['"Fraunces"', 'serif'],
+        body: ['"Space Grotesk"', 'sans-serif'],
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },

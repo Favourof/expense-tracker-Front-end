@@ -1,24 +1,19 @@
 import { useState, useEffect } from "react";
-import { publicRequest } from "@/shared/api/request";
+import { apiClient } from "@/shared/api/request";
 import { toast } from "@/components/ui/use-toast";
 
 export const useAddExpense = () => {
-  const [userId, setUserId] = useState(null);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem('userId');
-    if (storedUserId) {
-      setUserId(storedUserId);
-      getCategories(storedUserId);
-    }
+    getCategories();
   }, []);
 
-  const getCategories = async (storedUserId) => {
+  const getCategories = async () => {
     try {
       setIsLoading(true);
-      const response = await publicRequest.get(`/expense/all/${storedUserId}`);
+      const response = await apiClient.get(`/expense/all`);
       if (response) {
         const fetchedCategories = response.data.expenses.flatMap(expense => expense.categories);
         setCategories(fetchedCategories);
@@ -40,24 +35,20 @@ export const useAddExpense = () => {
 
     try {
       setIsLoading(true);
-      if (userId) {
-        const response = await publicRequest.post(`/expense/add`, {
-          userId,
-          categories: [newCategory],
-        });
+      const response = await apiClient.post(`/expense/add`, {
+        categories: [newCategory],
+      });
 
-        if (response.status === 201) {
-          await getCategories(userId);
-
-        }else{
-          toast({
-            title : 'hello',
-            description : 'Category Already exit'
-          })
-        }
-      
-        // console.log('Category added:', response.data);
+      if (response.status === 201) {
+        await getCategories();
+      } else {
+        toast({
+          title : 'hello',
+          description : 'Category Already exit'
+        })
       }
+    
+      // console.log('Category added:', response.data);
     } catch (error) {
       // console.error("Failed to add category:", error);
       toast({
@@ -72,14 +63,13 @@ export const useAddExpense = () => {
   const handleAddSubCategory = async (category, subCategory) => {
     try {
       setIsLoading(true);
-      const response = await publicRequest.post(`/expense/subcategory/add`, {
-        userId,
+      const response = await apiClient.post(`/expense/subcategory/add`, {
         categoryName: category.name,
         subCategory,
       });
 
       if (response.status === 200) {
-        await getCategories(userId);
+        await getCategories();
         toast({
           title: 'succefully Added',
           description: response.message

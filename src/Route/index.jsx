@@ -9,6 +9,8 @@ import AllIcome from "@/pages/DashBoard/Component/AllIcome";
 import Review from "@/pages/DashBoard/Component/Review";
 import AddExpense from "@/pages/DashBoard/Component/AddExpense";
 import MyExpense from "@/pages/DashBoard/Component/MyExpense";
+import ProtectedRoute from "./ProtectedRoute";
+import PublicOnlyRoute from "./PublicOnlyRoute";
 
 export const route = createBrowserRouter([
   {
@@ -17,19 +19,35 @@ export const route = createBrowserRouter([
   },
   {
     path: "/signup",
-    element: <SignUpPAge  />,
+    element: (
+      <PublicOnlyRoute>
+        <SignUpPAge />
+      </PublicOnlyRoute>
+    ),
   },
   {
     path: "/logIn",
-    element: <LoginPage />
+    element: (
+      <PublicOnlyRoute>
+        <LoginPage />
+      </PublicOnlyRoute>
+    )
   },
   {
     path: "/otp",
-    element: <OtpVerification />
+    element: (
+      <PublicOnlyRoute>
+        <OtpVerification />
+      </PublicOnlyRoute>
+    )
   },
   {
     path: "/dashboard",
-    element: <DashBoardRoute />,
+    element: (
+      <ProtectedRoute>
+        <DashBoardRoute />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,

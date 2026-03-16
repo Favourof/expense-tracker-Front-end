@@ -1,29 +1,37 @@
 import { useState, useEffect } from 'react';
-import { publicRequest } from '@/shared/api/request';
+import { apiClient } from '@/shared/api/request';
 
 export const useGetExpenses = () => {
-  const [userId, setUserId] = useState(null);
   const [expenses, setExpenses] = useState([]);
   const [weeklyExpenses, setWeeklyExpenses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem('userId');
-    if (storedUserId) {
-      setUserId(storedUserId);
-      fetchExpenses(storedUserId);
-    }
+    fetchExpenses();
   }, []);
 
-  const fetchExpenses = async (userId) => {
+  const fetchExpenses = async () => {
     try {
       setIsLoading(true);
-      const response = await publicRequest.get(`/expense/all/${userId}`);
+      const response = await apiClient.get(`/expense/all`);
       if (response.status === 200) {
-        const expenses = response.data.expenses;
+        const raw = response.data?.items ?? response.data?.expenses ?? response.data?.data ?? response.data ?? [];
+        const expenses = Array.isArray(raw)
+          ? raw.map((item) => ({ ...item, date: item.timestamp || item.date }))
+          : [];
         const recentMonthExpenses = filterRecentMonthExpenses(expenses);
         setExpenses(recentMonthExpenses);
-        setWeeklyExpenses(processWeeklyExpenses(recentMonthExpenses));
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const weeklyRes = await apiClient.get(`/summary/${year}/${month}/weekly`);
+        const weeklyList = Array.isArray(weeklyRes.data) ? weeklyRes.data : [];
+        setWeeklyExpenses(
+          weeklyList.map((week) => ({
+            week: `Week ${week.week}`,
+            amount: week.totalExpense || 0,
+          }))
+        );
         console.log(recentMonthExpenses);
       }
     } catch (error) {
@@ -34,37 +42,16 @@ export const useGetExpenses = () => {
   };
 
   const filterRecentMonthExpenses = (expenses) => {
+    const safeExpenses = Array.isArray(expenses) ? expenses : [];
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
-    return expenses.filter(expense => {
+    return safeExpenses.filter(expense => {
+      if (!expense?.date) return false;
       const expenseDate = new Date(expense.date);
       return expenseDate >= startOfMonth && expenseDate <= endOfMonth;
     });
-  };
-
-  const processWeeklyExpenses = (expenses) => {
-    const weeks = Array.from({ length: 5 }, () => 0); // Initialize 5 weeks with 0
-
-    expenses.forEach(expense => {
-      if (expense.categories && expense.categories.length > 0) {
-        expense.categories.forEach(category => {
-          if (category.subCategories && category.subCategories.length > 0) {
-            category.subCategories.forEach(subCategory => {
-              const expenseDate = new Date(subCategory.date);
-              const weekNumber = Math.ceil(expenseDate.getDate() / 7) - 1; // Determine the week number (0-based)
-              weeks[weekNumber] += subCategory.amount;
-            });
-          }
-        });
-      }
-    });
-
-    return weeks.map((amount, index) => ({
-      week: `Week ${index + 1}`,
-      amount,
-    }));
   };
 
   return { expenses, weeklyExpenses, isLoading, fetchExpenses };

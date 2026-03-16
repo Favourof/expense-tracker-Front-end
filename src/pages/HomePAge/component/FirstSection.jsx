@@ -1,56 +1,47 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { toast } from "@/components/ui/use-toast";
-import { getCurrentUser } from "@/features/AuthPage/AuthSlice";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 
-const CurrentUserComponent = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { currentUser } = useSelector((state) => state.auth);
-  const status = useSelector((state) => state.auth.status);
-  const error = useSelector((state) => state.auth.error);
-
-  useEffect(() => {
-    dispatch(getCurrentUser());
-  }, [dispatch]);
-
-  useEffect(() => {
-    let timer;
-    if (!currentUser) {
-      timer = setTimeout(() => {
-        toast({
-          title: "Hello",
-          description: "Your token has expired. Please log in.",
-        });
-        navigate("/login");
-      }, 20000);
-    }
-    return () => clearTimeout(timer);
-  }, [currentUser, navigate]);
-
-  if (status === "loading") {
-    return <h1>Loading...</h1>;
-  }
-
-  if (error) {
-    toast({
-      title: "Hello",
-      description: "Your token has expired. Please log in.",
-    });
-  }
-
+const FirstSection = () => {
+  const { accessToken } = useAuth();
+  const isLoggedIn = Boolean(accessToken);
   return (
-    <div>
-      {/* {currentUser? (
-        <div>
-          <h1>Welcome, {currentUser.firstName}</h1>
+    <header className="border-b border-slate-200 bg-[#f7f4ee]">
+      <div className="bg-[#0b3b2e] text-white">
+        <div className="container flex items-center justify-between py-2 text-sm">
+          <p className="font-medium">Built for Nigeria. Manual tracking now, bank connections next.</p>
+          <span className="hidden sm:inline">Opay, PalmPay, Kuda, Moniepoint coming soon</span>
         </div>
-      ) : (
-        <div>No user data</div>
-      )} */}
-    </div>
+      </div>
+      <div className="container flex items-center justify-between py-4">
+        <Link to="/" className="flex items-center gap-2">
+          <div className="h-8 w-8 rounded-lg bg-[#f47d4a]" />
+          <span className="text-lg font-semibold tracking-tight">ExpenseTracker</span>
+        </Link>
+        <nav className="hidden items-center gap-6 text-sm font-medium text-slate-700 md:flex">
+          <a href="#features" className="hover:text-slate-900">Features</a>
+          <a href="#how" className="hover:text-slate-900">How it works</a>
+          <a href="#integrations" className="hover:text-slate-900">Integrations</a>
+        </nav>
+        <div className="flex items-center gap-2">
+          {isLoggedIn ? (
+            <Button asChild>
+              <Link to="/dashboard">Go to dashboard</Link>
+            </Button>
+          ) : (
+            <>
+              <Button variant="ghost" asChild>
+                <Link to="/logIn">Log in</Link>
+              </Button>
+              <Button asChild>
+                <Link to="/signup">Get started</Link>
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
+    </header>
   );
 };
 
-export default CurrentUserComponent;
+export default FirstSection;

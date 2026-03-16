@@ -60,8 +60,8 @@ export const useGetTotalIncome = () => {
 
   useEffect(() => {
     if (currentUser) {
-      dispatch(getTotalIncome({ userId: currentUser._id, year, month }));
-      dispatch(getTotalExpense({ userId: currentUser._id, year, month }));
+      dispatch(getTotalIncome({ year, month }));
+      dispatch(getTotalExpense({ year, month }));
     }
   }, [currentUser, year, month, dispatch]);
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { publicRequest } from "@/shared/api/request";
+import { apiClient } from "@/shared/api/request";
 import { useToast } from "@/components/ui/use-toast";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,6 @@ const AnimatedForm = ({ onSuccess }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
   const [formData, setFormData] = useState({
-    userId: localStorage.getItem("userId"),
     amount: 2000,
     source: "salary",
   });
@@ -24,7 +23,7 @@ const AnimatedForm = ({ onSuccess }) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await publicRequest.post("/income/addincome", formData);
+      const response = await apiClient.post("/income/addincome", formData);
       if (response) {
         toast({
           title: "Success",
