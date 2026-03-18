@@ -11,11 +11,13 @@ import AddExpense from "@/pages/DashBoard/Component/AddExpense";
 import MyExpense from "@/pages/DashBoard/Component/MyExpense";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicOnlyRoute from "./PublicOnlyRoute";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 export const route = createBrowserRouter([
   {
     path: "/",
     element: <HomePage  />,
+    errorElement: <ErrorBoundary />,
   },
   {
     path: "/signup",
@@ -24,6 +26,7 @@ export const route = createBrowserRouter([
         <SignUpPAge />
       </PublicOnlyRoute>
     ),
+    errorElement: <ErrorBoundary />,
   },
   {
     path: "/logIn",
@@ -31,7 +34,8 @@ export const route = createBrowserRouter([
       <PublicOnlyRoute>
         <LoginPage />
       </PublicOnlyRoute>
-    )
+    ),
+    errorElement: <ErrorBoundary />,
   },
   {
     path: "/otp",
@@ -39,7 +43,8 @@ export const route = createBrowserRouter([
       <PublicOnlyRoute>
         <OtpVerification />
       </PublicOnlyRoute>
-    )
+    ),
+    errorElement: <ErrorBoundary />,
   },
   {
     path: "/dashboard",
@@ -48,6 +53,7 @@ export const route = createBrowserRouter([
         <DashBoardRoute />
       </ProtectedRoute>
     ),
+    errorElement: <ErrorBoundary />,
     children: [
       {
         index: true,

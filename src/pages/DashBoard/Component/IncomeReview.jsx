@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LabelList,  } from 'recharts';
 import { useGetAllIncome } from '../hooks/useGetAllIcome';
+import { useCurrency } from "@/context/CurrencyContext";
 // import { useGetAllIncome } from '../hooks/useGetAllIncome';
 
 const IncomeReview = ({ startDate, endDate }) => {
   const { allIncome, weeklyIncome, isLoading } = useGetAllIncome();
   const [monthlyIncome, setMonthlyIncome] = useState(parseFloat(localStorage.getItem('monthlyIncome')) || 0);
-  const [cov, setCov] = useState(parseFloat(localStorage.getItem('cov')) || 1);
-  const [currency, setCurrency] = useState(localStorage.getItem('currency') || 'USD');
+  const { rate: cov, currency } = useCurrency();
   const [data, setData] = useState([]);
 
   useEffect(() => {

@@ -2,10 +2,13 @@
 import { useGetTotalIncome } from "../hooks/useGetTotalIncome";
 import { useGetAllIncome } from "../hooks/useGetAllIcome";
 import { useGetExpenses } from "../hooks/useGetExpenses";
-import useCurrencyConverter from "../hooks/useCurrencyConverter";
+import { useCurrency } from "@/context/CurrencyContext";
+import { useFinance } from "@/context/FinanceContext";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import PieChart from "./PieChart";
-import { ArrowDownRight, ArrowUpRight, PiggyBank, Wallet2, TrendingUp } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, PiggyBank, Wallet2 } from "lucide-react";
+import IncomeBottomSheet from "@/components/income/IncomeBottomSheet";
+import { useAuth } from "@/context/AuthContext";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -22,11 +25,14 @@ const MainDashboard = () => {
     expenseData,
     handleCurrencyChange,
     currency,
+    refreshTotals,
   } = useGetTotalIncome();
   const { allIncome, weeklyIncome } = useGetAllIncome();
   const { expenses, weeklyExpenses } = useGetExpenses();
+  const { onIncomeMutated } = useFinance();
+  const { isUserLoading } = useAuth();
 
-  const conversionRate = useCurrencyConverter(currency);
+  const { rate: conversionRate } = useCurrency();
 
   useEffect(() => {
     if (incomeData?.month === month) {
@@ -150,8 +156,8 @@ const MainDashboard = () => {
     trendMode === "weekly"
       ? Array.from({ length: 5 }, (_, index) => `W${index + 1}`)
       : last7Days.map((d) =>
-          new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(d)
-        );
+        new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(d)
+      );
 
   const maxTrend = Math.max(...trendIncome, ...trendExpense, 1);
   const sparkWidth = 140;
@@ -210,13 +216,22 @@ const MainDashboard = () => {
             <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
               Dashboard overview
             </p>
-            <h1 className="mt-2 text-2xl font-semibold text-slate-900 lg:text-3xl">
-              Your money flow for {monthLabel}
-            </h1>
-            <p className="mt-2 text-sm text-slate-600">
-              Track income and expenses, understand spending patterns, and keep your savings on
-              track.
-            </p>
+            {isUserLoading ? (
+              <div className="mt-2 space-y-2">
+                <div className="h-7 w-56 animate-pulse rounded-full bg-slate-200" />
+                <div className="h-4 w-72 animate-pulse rounded-full bg-slate-100" />
+              </div>
+            ) : (
+              <>
+                <h1 className="mt-2 text-2xl font-semibold text-slate-900 lg:text-3xl">
+                  Your money flow for {monthLabel}
+                </h1>
+                <p className="mt-2 text-sm text-slate-600">
+                  Track income and expenses, understand spending patterns, and keep your savings on
+                  track.
+                </p>
+              </>
+            )}
           </div>
           <div className="w-full max-w-sm">
             <button
@@ -228,9 +243,8 @@ const MainDashboard = () => {
               <span className="text-xs text-slate-500">Currency: {currency}</span>
             </button>
             <div
-              className={`mt-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 ${
-                showCurrency ? "block" : "hidden"
-              } md:block`}
+              className={`mt-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 ${showCurrency ? "block" : "hidden"
+                } md:block`}
             >
               <label htmlFor="currency" className="block text-xs font-semibold text-slate-500">
                 Preferred currency
@@ -287,17 +301,15 @@ const MainDashboard = () => {
               {isDeficit ? "Deficit" : "Net savings"}
             </p>
             <span
-              className={`flex h-9 w-9 items-center justify-center rounded-full ${
-                isDeficit ? "bg-red-50 text-red-600" : "bg-emerald-50 text-emerald-600"
-              }`}
+              className={`flex h-9 w-9 items-center justify-center rounded-full ${isDeficit ? "bg-red-50 text-red-600" : "bg-emerald-50 text-emerald-600"
+                }`}
             >
               <Wallet2 className="h-4 w-4" />
             </span>
           </div>
           <p
-            className={`mt-3 text-2xl font-semibold ${
-              isDeficit ? "text-red-500" : "text-emerald-600"
-            }`}
+            className={`mt-3 text-2xl font-semibold ${isDeficit ? "text-red-500" : "text-emerald-600"
+              }`}
           >
             {formatCurrency(Math.abs(savingRate))}
           </p>
@@ -353,20 +365,27 @@ const MainDashboard = () => {
             </div>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => (window.location.href = "/dashboard/income")}
-              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-            >
-              Add income
-            </button>
-            <button
-              type="button"
-              onClick={() => (window.location.href = "/dashboard/addExpense")}
-              className="rounded-full bg-[#f47d4a] px-4 py-2 text-xs font-semibold text-white hover:bg-[#e56f3d]"
-            >
-              Add expense
-            </button>
+            {isUserLoading ? (
+              <>
+                <div className="h-9 w-28 animate-pulse rounded-full bg-slate-200" />
+                <div className="h-9 w-28 animate-pulse rounded-full bg-slate-200" />
+              </>
+            ) : (
+              <>
+                <IncomeBottomSheet
+                  triggerLabel="Add income"
+                  triggerClassName="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                  onSuccess={onIncomeMutated}
+                />
+                <button
+                  type="button"
+                  onClick={() => (window.location.href = "/dashboard/addExpense")}
+                  className="rounded-full bg-[#f47d4a] px-4 py-2 text-xs font-semibold text-white hover:bg-[#e56f3d]"
+                >
+                  Add expense
+                </button>
+              </>
+            )}
           </div>
         </div>
 
@@ -401,9 +420,8 @@ const MainDashboard = () => {
                     </p>
                   </div>
                   <div
-                    className={`text-sm font-semibold ${
-                      item.type === "income" ? "text-emerald-600" : "text-orange-600"
-                    }`}
+                    className={`text-sm font-semibold ${item.type === "income" ? "text-emerald-600" : "text-orange-600"
+                      }`}
                   >
                     {item.type === "income" ? "+" : "-"}
                     {formatCurrency(item.amount)}
@@ -482,9 +500,8 @@ const MainDashboard = () => {
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2">
                     <span
-                      className={`h-2 w-2 rounded-full ${
-                        isDeficit ? "bg-red-400" : "bg-slate-300"
-                      }`}
+                      className={`h-2 w-2 rounded-full ${isDeficit ? "bg-red-400" : "bg-slate-300"
+                        }`}
                     />
                     {isDeficit ? "Deficit" : "Savings"}
                   </span>
@@ -726,9 +743,8 @@ const MainDashboard = () => {
                 )}
               </svg>
               <div
-                className={`mt-3 grid text-[10px] text-slate-400 ${
-                  trendLabels.length === 5 ? "grid-cols-5" : "grid-cols-7"
-                }`}
+                className={`mt-3 grid text-[10px] text-slate-400 ${trendLabels.length === 5 ? "grid-cols-5" : "grid-cols-7"
+                  }`}
               >
                 {trendLabels.map((label) => (
                   <span key={label} className="text-center">

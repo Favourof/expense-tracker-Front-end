@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaEnvelope, FaInfoCircle, FaBars, FaSignOutAlt } from "react-icons/fa";
 import { MdDashboard, MdOutlineInsights } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
 import { GiExpense } from "react-icons/gi";
 import { useAuth } from "@/context/AuthContext";
-import { getCurrentUser } from "@/features/AuthPage/AuthSlice";
+import IncomeBottomSheet from "@/components/income/IncomeBottomSheet";
 
 const navItems = [
   { name: "Dashboard", path: "/dashboard", icon: <MdDashboard className="h-5 w-5" /> },
@@ -17,22 +16,12 @@ const navItems = [
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [refresh, setRefresh] = useState(false);
-  const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, currentUser, fetchCurrentUser, isUserLoading } = useAuth();
 
   useEffect(() => {
-    if (refresh) {
-      dispatch(getCurrentUser());
-      setRefresh(false);
-    }
-  }, [dispatch, refresh]);
-
-  useEffect(() => {
-    dispatch(getCurrentUser());
-  }, [dispatch]);
+    fetchCurrentUser();
+  }, [fetchCurrentUser]);
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -44,7 +33,6 @@ const Navigation = () => {
     localStorage.removeItem("monthlyIncome");
     localStorage.removeItem("monthlyExpense");
     localStorage.removeItem("cov");
-    setRefresh(true);
     navigate("/");
   };
 
@@ -57,21 +45,27 @@ const Navigation = () => {
         <div className="flex flex-1 items-center justify-end gap-3">
           <div className="text-right text-sm">
             <p className="font-semibold text-slate-900">
-              {currentUser?.firstName || "Hi there"}
+              {isUserLoading ? "Loading..." : currentUser?.firstName || "Hi there"}
             </p>
-            <p className="text-xs text-slate-500">Welcome back</p>
+            <p className="text-xs text-slate-500">
+              {isUserLoading ? "Fetching profile" : "Welcome back"}
+            </p>
           </div>
-          <img
-            src={currentUser?.image}
-            alt={currentUser?.firstName || "User avatar"}
-            className="h-9 w-9 rounded-full object-cover"
-          />
+          {isUserLoading ? (
+            <div className="h-9 w-9 animate-pulse rounded-full bg-slate-200" />
+          ) : (
+            <img
+              src={currentUser?.image}
+              alt={currentUser?.firstName || "User avatar"}
+              className="h-9 w-9 rounded-full object-cover"
+            />
+          )}
         </div>
         <div className="h-6 w-6" />
       </div>
 
       <aside
-        className={`fixed left-0 top-0 z-40 h-full w-64 border-r border-slate-200 bg-white px-5 pb-6 pt-6 shadow-lg transition-transform sm:w-72 lg:static lg:translate-x-0 ${
+        className={`fixed left-0 top-0 z-40 h-full w-64 border-r border-slate-200 bg-white px-5 pb-6 pt-6 shadow-lg transition-transform sm:w-72 lg:static lg:translate-x-0 lg:h-screen lg:sticky lg:top-0 lg:overflow-y-auto ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
@@ -85,17 +79,21 @@ const Navigation = () => {
 
         <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
           <div className="flex items-center gap-3">
-            <img
-              src={currentUser?.image}
-              alt={currentUser?.firstName || "User avatar"}
-              className="h-12 w-12 rounded-full object-cover"
-            />
+            {isUserLoading ? (
+              <div className="h-12 w-12 animate-pulse rounded-full bg-slate-200" />
+            ) : (
+              <img
+                src={currentUser?.image}
+                alt={currentUser?.firstName || "User avatar"}
+                className="h-12 w-12 rounded-full object-cover"
+              />
+            )}
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-slate-900">
-                {currentUser?.firstName || "Account"}
+                {isUserLoading ? "Loading..." : currentUser?.firstName || "Account"}
               </p>
               <p className="truncate text-xs text-slate-500">
-                {currentUser?.email || "Active member"}
+                {isUserLoading ? "Fetching details" : currentUser?.email || "Active member"}
               </p>
             </div>
           </div>
@@ -139,12 +137,11 @@ const Navigation = () => {
           <p className="font-semibold text-slate-900">Quick actions</p>
           <p className="mt-1 text-xs text-slate-500">Log income or expense faster.</p>
           <div className="mt-3 flex gap-2">
-            <button
-              onClick={() => navigate("/dashboard/income")}
-              className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-            >
-              Add income
-            </button>
+            <IncomeBottomSheet
+              triggerLabel="Add income"
+              triggerClassName="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+              onSuccess={fetchCurrentUser}
+            />
             <button
               onClick={() => navigate("/dashboard/addExpense")}
               className="flex-1 rounded-lg bg-[#f47d4a] px-3 py-2 text-xs font-semibold text-white hover:bg-[#e56f3d]"

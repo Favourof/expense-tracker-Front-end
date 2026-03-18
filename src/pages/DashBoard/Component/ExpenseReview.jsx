@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LabelList } from 'recharts';
 import { useGetExpenses } from '../hooks/useGetExpenses';
+import { useCurrency } from "@/context/CurrencyContext";
 
 const ExpenseReview = () => {
   const { weeklyExpenses, isLoading } = useGetExpenses();
   const [monthlyExpense, setMonthlyExpense] = useState(parseFloat(localStorage.getItem('monthlyExpense')) || 0);
-  const [cov, setCov] = useState(parseFloat(localStorage.getItem('cov')) || 1);
-  const [currency, setCurrency] = useState(localStorage.getItem('currency') || 'USD');
+  const { rate: cov, currency } = useCurrency();
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const ExpenseReview = () => {
       }));
       setData(chartData);
     }
-  }, [weeklyExpenses, monthlyExpense]);
+  }, [weeklyExpenses, cov, monthlyExpense]);
 
   const getMonthName = (date) => {
     const options = { month: 'long', year: 'numeric' };

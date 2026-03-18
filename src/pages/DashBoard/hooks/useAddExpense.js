@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { apiClient } from "@/shared/api/request";
 import { toast } from "@/components/ui/use-toast";
+import { useFinance } from "@/context/FinanceContext";
 
 export const useAddExpense = () => {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { onExpenseMutated } = useFinance();
 
   useEffect(() => {
     getCategories();
@@ -41,6 +43,7 @@ export const useAddExpense = () => {
 
       if (response.status === 201) {
         await getCategories();
+        await onExpenseMutated();
       } else {
         toast({
           title : 'hello',
@@ -70,6 +73,7 @@ export const useAddExpense = () => {
 
       if (response.status === 200) {
         await getCategories();
+        await onExpenseMutated();
         toast({
           title: 'succefully Added',
           description: response.message

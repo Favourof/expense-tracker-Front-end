@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getCurrentUser, getTotalIncome, getTotalExpense } from "@/features/AuthPage/AuthSlice";
+import { useCurrency } from "@/context/CurrencyContext";
+import { useFinance } from "@/context/FinanceContext";
 
 export const useGetTotalIncome = () => {
   const now = new Date();
   const [month, setMonth] = useState(now.getMonth() + 1); // getMonth() returns 0-11, so add 1 for 1-12
   const [year, setYear] = useState(now.getFullYear());
-  const dispatch = useDispatch();
-  const { currentUser, incomeData, expenseData } = useSelector((state) => state.auth);
+  const { incomeSummary, expenseSummary, fetchTotals } = useFinance();
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [recentCovert, setrecentCovert] = useState();
@@ -37,40 +36,23 @@ export const useGetTotalIncome = () => {
     }
   };
 
-  const getInitialCurrency = () => {
-    const savedCurrency = localStorage.getItem("currency");
-    return savedCurrency || "USD";
-  };
-
-  const [currency, setCurrency] = useState(getInitialCurrency());
+  const { currency, setCurrency } = useCurrency();
 
   const handleCurrencyChange = (e) => {
     setCurrency(e.target.value);
-    // setrecentCovert(currency)
   };
 
-  useEffect(() => {
-    dispatch(getCurrentUser()); // Dispatch the action to get the current user
-  }, [dispatch]);
+  useEffect(() => {}, [currency]);
 
   useEffect(() => {
-    localStorage.setItem("currency", currency);
-    // setrecentCovert(currency)
-  }, [currency]);
-
-  useEffect(() => {
-    if (currentUser) {
-      dispatch(getTotalIncome({ year, month }));
-      dispatch(getTotalExpense({ year, month }));
-    }
-  }, [currentUser, year, month, dispatch]);
+    fetchTotals();
+  }, [year, month, fetchTotals]);
 
   return { 
     month, 
     year, 
-    currentUser, 
-    incomeData, 
-    expenseData, 
+    incomeData: incomeSummary, 
+    expenseData: expenseSummary, 
     handleCurrencyChange, 
     currency, 
     formatDate, 
@@ -78,6 +60,7 @@ export const useGetTotalIncome = () => {
     handleEndDateChange, 
     endDate, 
     startDate,
-    recentCovert
+    recentCovert,
+    refreshTotals: fetchTotals
   };
 };
