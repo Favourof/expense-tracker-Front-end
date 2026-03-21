@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { FaEnvelope, FaInfoCircle, FaBars, FaSignOutAlt } from "react-icons/fa";
+import { FaEnvelope, FaInfoCircle, FaSignOutAlt } from "react-icons/fa";
 import { MdDashboard, MdOutlineInsights } from "react-icons/md";
 import { GiExpense } from "react-icons/gi";
 import { useAuth } from "@/context/AuthContext";
@@ -16,17 +16,12 @@ const navItems = [
 ];
 
 const Navigation = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { logout, currentUser, fetchCurrentUser, isUserLoading } = useAuth();
 
   useEffect(() => {
     fetchCurrentUser();
   }, [fetchCurrentUser]);
-
-  const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
-  };
 
   const handleLogOut = () => {
     logout();
@@ -40,9 +35,6 @@ const Navigation = () => {
   return (
     <div className="relative">
       <div className="sticky top-0 z-20 flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 shadow-sm lg:hidden">
-        <button onClick={toggleMenu} className="text-slate-700">
-          <FaBars className="h-6 w-6" />
-        </button>
         <div className="flex flex-1 items-center justify-end gap-3">
           <div className="text-right text-sm">
             <p className="font-semibold text-slate-900">
@@ -66,9 +58,7 @@ const Navigation = () => {
       </div>
 
       <aside
-        className={`fixed left-0 top-0 z-40 h-full w-64 border-r border-slate-200 bg-white px-5 pb-6 pt-6 shadow-lg transition-transform sm:w-72 lg:static lg:translate-x-0 lg:h-screen lg:sticky lg:top-0 lg:overflow-y-auto ${
-          isMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        }`}
+        className="hidden w-72 border-r border-slate-200 bg-white px-5 pb-6 pt-6 shadow-lg lg:sticky lg:top-0 lg:block lg:h-screen lg:overflow-y-auto"
       >
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-xl bg-[#f47d4a]" />
@@ -158,12 +148,6 @@ const Navigation = () => {
         </button>
       </aside>
 
-      {isMenuOpen && (
-        <div
-          className="fixed inset-0 z-30 bg-black/40 lg:hidden"
-          onClick={() => setIsMenuOpen(false)}
-        />
-      )}
     </div>
   );
 };
