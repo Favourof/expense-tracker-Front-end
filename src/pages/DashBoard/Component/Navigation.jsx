@@ -5,11 +5,12 @@ import { MdDashboard, MdOutlineInsights } from "react-icons/md";
 import { GiExpense } from "react-icons/gi";
 import { useAuth } from "@/context/AuthContext";
 import IncomeBottomSheet from "@/components/income/IncomeBottomSheet";
+import ExpenseBottomSheet from "@/components/expense/ExpenseBottomSheet";
 
 const navItems = [
   { name: "Dashboard", path: "/dashboard", icon: <MdDashboard className="h-5 w-5" /> },
   { name: "Income", path: "income", icon: <MdOutlineInsights className="h-5 w-5" /> },
-  { name: "Add Expense", path: "addExpense", icon: <FaEnvelope className="h-5 w-5" /> },
+  { name: "Manage Expense", path: "addExpense", icon: <FaEnvelope className="h-5 w-5" /> },
   { name: "My Expense", path: "myexpense", icon: <GiExpense className="h-5 w-5" /> },
   { name: "Review", path: "review", icon: <FaInfoCircle className="h-5 w-5" /> },
 ];
@@ -142,12 +143,10 @@ const Navigation = () => {
               triggerClassName="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
               onSuccess={fetchCurrentUser}
             />
-            <button
-              onClick={() => navigate("/dashboard/addExpense")}
-              className="flex-1 rounded-lg bg-[#f47d4a] px-3 py-2 text-xs font-semibold text-white hover:bg-[#e56f3d]"
-            >
-              Add expense
-            </button>
+            <ExpenseBottomSheet
+              triggerLabel="Add expense"
+              triggerClassName="flex-1 rounded-lg bg-[#f47d4a] px-3 py-2 text-xs font-semibold text-white hover:bg-[#e56f3d]"
+            />
           </div>
         </div>
 

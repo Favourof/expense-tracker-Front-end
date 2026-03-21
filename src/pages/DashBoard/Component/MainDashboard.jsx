@@ -9,6 +9,7 @@ import PieChart from "./PieChart";
 import { ArrowDownRight, ArrowUpRight, PiggyBank, Wallet2 } from "lucide-react";
 import IncomeBottomSheet from "@/components/income/IncomeBottomSheet";
 import { useAuth } from "@/context/AuthContext";
+import ExpenseBottomSheet from "@/components/expense/ExpenseBottomSheet";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -265,6 +266,9 @@ const MainDashboard = () => {
               <p className="mt-2 text-xs text-slate-500">
                 Converted values are shown across all charts.
               </p>
+              <p className="mt-2 text-xs text-slate-500">
+                Base currency is NGN; other currencies are display only.
+              </p>
             </div>
           </div>
         </div>
@@ -377,13 +381,10 @@ const MainDashboard = () => {
                   triggerClassName="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
                   onSuccess={onIncomeMutated}
                 />
-                <button
-                  type="button"
-                  onClick={() => (window.location.href = "/dashboard/addExpense")}
-                  className="rounded-full bg-[#f47d4a] px-4 py-2 text-xs font-semibold text-white hover:bg-[#e56f3d]"
-                >
-                  Add expense
-                </button>
+                <ExpenseBottomSheet
+                  triggerLabel="Add expense"
+                  triggerClassName="rounded-full bg-[#f47d4a] px-4 py-2 text-xs font-semibold text-white hover:bg-[#e56f3d]"
+                />
               </>
             )}
           </div>

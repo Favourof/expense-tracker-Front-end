@@ -1,27 +1,37 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { apiClient } from "@/shared/api/request";
 import { toast } from "@/components/ui/use-toast";
-import { useFinance } from "@/context/FinanceContext";
+import { useAuth } from "@/context/AuthContext";
 
 export const useAddExpense = () => {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { onExpenseMutated } = useFinance();
+  const { currentUser, isUserLoading } = useAuth();
 
   useEffect(() => {
-    getCategories();
-  }, []);
+    if (!isUserLoading && currentUser) {
+      getCategories();
+    }
+  }, [isUserLoading, currentUser]);
 
   const getCategories = async () => {
     try {
       setIsLoading(true);
-      const response = await apiClient.get(`/expense/all`);
-      if (response) {
-        const fetchedCategories = response.data.expenses.flatMap(expense => expense.categories);
-        setCategories(fetchedCategories);
-      }
+      const response = await apiClient.get(`/categories?type=expense`);
+      const items = Array.isArray(response?.data?.items) ? response.data.items : [];
+      setCategories(items);
     } catch (error) {
-      console.error('Failed to fetch categories:', error);
+      console.error("Failed to fetch categories:", error);
+      if (error?.response?.status === 401) {
+        toast({
+          title: "Session expired",
+          description: "Please log in again to load categories.",
+        });
+      }
+      toast({
+        title: "Error",
+        description: "Unable to load categories.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -29,35 +39,30 @@ export const useAddExpense = () => {
 
   const handleAddCategory = async (categoryName) => {
     if (!categoryName) return;
-
-    const newCategory = {
-      name: categoryName,
-      subCategories: []
-    };
-
     try {
       setIsLoading(true);
-      const response = await apiClient.post(`/expense/add`, {
-        categories: [newCategory],
+      const response = await apiClient.post(`/categories`, {
+        name: categoryName,
+        type: "expense",
       });
 
       if (response.status === 201) {
         await getCategories();
-        await onExpenseMutated();
+        toast({
+          title: "Category added",
+          description: "New expense category created.",
+        });
       } else {
         toast({
-          title : 'hello',
-          description : 'Category Already exit'
-        })
+          title: "Unable to add",
+          description: "Category already exists.",
+        });
       }
-    
-      // console.log('Category added:', response.data);
     } catch (error) {
-      // console.error("Failed to add category:", error);
       toast({
-          title : 'hello❌❌',
-          description : 'Category Added Succefully'
-      })
+        title: "Error",
+        description: error?.response?.data?.message || "Failed to add category.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -66,32 +71,29 @@ export const useAddExpense = () => {
   const handleAddSubCategory = async (category, subCategory) => {
     try {
       setIsLoading(true);
-      const response = await apiClient.post(`/expense/subcategory/add`, {
-        categoryName: category.name,
-        subCategory,
+      const response = await apiClient.post(`/categories`, {
+        name: subCategory.name,
+        type: "expense",
+        parentId: category._id,
       });
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         await getCategories();
-        await onExpenseMutated();
         toast({
-          title: 'succefully Added',
-          description: response.message
-        })
-        console.log('success')
+          title: "Subcategory added",
+          description: "Expense saved under category.",
+        });
       } else {
-        console.error('Failed to add subcategory:', response.data.message);
         toast({
-          title: 'Error',
-          description: response.data.message
-        })
+          title: "Error",
+          description: response.data?.message || "Failed to add subcategory.",
+        });
       }
     } catch (error) {
-      console.error('Failed to add subcategory:', error);
       toast({
-        title: 'Error',
-        description: error.message
-      })
+        title: "Error",
+        description: error?.response?.data?.message || error.message,
+      });
     } finally {
       setIsLoading(false);
     }

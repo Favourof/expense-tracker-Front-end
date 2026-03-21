@@ -1,9 +1,6 @@
 import React from 'react';
-import { useGetExpenses } from '../hooks/useGetExpenses';
 import { GiExpense } from "react-icons/gi";
-import { useGetTotalIncome } from '../hooks/useGetTotalIncome';
 import Loader from './Loader';
-import { useCurrency } from "@/context/CurrencyContext";
 
 const iconArray = [GiExpense];
 
@@ -16,10 +13,7 @@ const hashStringToIndex = (str, arrayLength) => {
   return Math.abs(hash) % arrayLength;
 };
 
-const ExpenseAccordion = () => {
-  const { expenses, isLoading } = useGetExpenses();
-  const { formatDate } = useGetTotalIncome();
-  const { currency, rate: cov } = useCurrency();
+const ExpenseAccordion = ({ expenses, isLoading, formatDate, currency, rate, onSelect }) => {
 
   if (isLoading) {
     return (
@@ -34,9 +28,10 @@ const ExpenseAccordion = () => {
       {expenses.map((expense, index) => {
         if (!expense?.categories || expense.categories.length === 0) {
           return (
-            <div
+            <button
               key={expense._id || index}
-              className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
+              className="w-full rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:border-orange-200 hover:bg-orange-50"
+              onClick={() => onSelect && onSelect(expense)}
             >
               <div className="flex items-center justify-between">
                 <div>
@@ -50,15 +45,16 @@ const ExpenseAccordion = () => {
                       day: 'numeric',
                     }).format(new Date(expense.date))}
                   </p>
+                  <p className="text-xs text-slate-400">{formatDate(expense.date)}</p>
                 </div>
                 <p className="text-sm font-semibold text-orange-600">
                   {new Intl.NumberFormat("en-US", {
                     style: "currency",
                     currency,
-                  }).format(expense.amount * cov)}
+                  }).format(expense.amount * rate)}
                 </p>
               </div>
-            </div>
+            </button>
           );
         }
 
@@ -107,11 +103,11 @@ const ExpenseAccordion = () => {
                               </p>
                               <p className="text-xs text-red-500">{formatDate(subCategory.date)}</p>
                             </div>
-                            <div className="text-sm font-semibold text-slate-900">
+                              <div className="text-sm font-semibold text-slate-900">
                               {new Intl.NumberFormat("en-US", {
                                 style: "currency",
                                 currency,
-                              }).format(subCategory.amount * cov)}
+                              }).format(subCategory.amount * rate)}
                             </div>
                           </div>
                         </div>
