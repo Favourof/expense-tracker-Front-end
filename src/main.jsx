@@ -7,6 +7,9 @@ import { Toaster } from "./components/ui/toaster";
 import { AuthProvider } from "./context/AuthContext";
 import { CurrencyProvider } from "./context/CurrencyContext";
 import { FinanceProvider } from "./context/FinanceContext";
+import { registerSW } from "virtual:pwa-register";
+
+registerSW({ immediate: true });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
