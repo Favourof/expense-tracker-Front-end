@@ -1,5 +1,4 @@
-﻿import React, { useEffect, useMemo, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import React, { useEffect, useMemo, useState } from "react";
 import { useAddExpense } from "../hooks/useAddExpense";
 import Loader from "./Loader";
 import AddSubCategoryForm from "./AddSubCategoryForm";
@@ -37,7 +36,8 @@ const hashStringToIndex = (str, arrayLength) => {
 };
 
 const AddExpense = () => {
-  const { handleAddCategory, handleAddSubCategory, categories, isLoading, getCategories } = useAddExpense();
+  const { handleAddCategory, handleAddSubCategory, categories, isLoading, getCategories } =
+    useAddExpense();
   const [newCategory, setNewCategory] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [query, setQuery] = useState("");
@@ -69,6 +69,23 @@ const AddExpense = () => {
     setSelectedCategory(null);
   };
 
+  const handleCategoryToggle = (name) => {
+    setSelectedCategories((prev) =>
+      prev.includes(name) ? prev.filter((item) => item !== name) : [...prev, name]
+    );
+  };
+
+  const handleAddFilterChip = () => {
+    const value = query.trim();
+    if (!value) return;
+
+    if (!selectedCategories.includes(value)) {
+      setSelectedCategories((prev) => [...prev, value]);
+    }
+
+    setQuery("");
+  };
+
   const filteredCategories = useMemo(() => {
     const list = Array.isArray(categories) ? categories : [];
     return list.filter((category) => {
@@ -94,9 +111,7 @@ const AddExpense = () => {
   }, [expenses]);
 
   const formatCurrency = (amount) =>
-    new Intl.NumberFormat("en-US", { style: "currency", currency }).format(
-      amount * rate
-    );
+    new Intl.NumberFormat("en-US", { style: "currency", currency }).format(amount * rate);
 
   if (isLoading) {
     return <Loader />;
@@ -110,9 +125,7 @@ const AddExpense = () => {
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
               Manage expense
             </p>
-            <h1 className="mt-2 text-2xl font-semibold text-slate-900">
-              Choose a category
-            </h1>
+            <h1 className="mt-2 text-2xl font-semibold text-slate-900">Choose a category</h1>
             <p className="mt-2 text-sm text-slate-600">
               Select a category to log a new expense quickly.
             </p>
@@ -258,21 +271,21 @@ const AddExpense = () => {
               return (
                 <button
                   type="button"
-                  key={uuidv4()}
+                  key={category._id || category.name}
                   className="group rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:border-orange-200 hover:bg-orange-50"
                   onClick={() => handleCategoryClick(category)}
                 >
                   <div className="flex items-center justify-between">
-                    <span className={`flex h-12 w-12 items-center justify-center rounded-2xl ${bgColor} text-white shadow-lg ${shadowColor}`}>
+                    <span
+                      className={`flex h-12 w-12 items-center justify-center rounded-2xl ${bgColor} text-white shadow-lg ${shadowColor}`}
+                    >
                       <Icon className="h-6 w-6" />
                     </span>
                     <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[10px] font-semibold text-slate-600">
                       {stat.count} entries
                     </span>
                   </div>
-                  <p className="mt-4 text-base font-semibold text-slate-900">
-                    {category.name}
-                  </p>
+                  <p className="mt-4 text-base font-semibold text-slate-900">{category.name}</p>
                   <p className="mt-1 text-xs text-slate-500">
                     {stat.total > 0 ? `${formatCurrency(stat.total)} this month` : "No spend yet"}
                   </p>
@@ -311,17 +324,3 @@ const AddExpense = () => {
 };
 
 export default AddExpense;
-  const handleCategoryToggle = (name) => {
-    setSelectedCategories((prev) =>
-      prev.includes(name) ? prev.filter((item) => item !== name) : [...prev, name]
-    );
-  };
-
-  const handleAddFilterChip = () => {
-    const value = query.trim();
-    if (!value) return;
-    if (!selectedCategories.includes(value)) {
-      setSelectedCategories((prev) => [...prev, value]);
-    }
-    setQuery("");
-  };
