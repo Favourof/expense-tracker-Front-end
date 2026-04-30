@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+﻿import React, { useEffect, useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useAddExpense } from "../hooks/useAddExpense";
 import Loader from "./Loader";
@@ -48,7 +48,7 @@ const AddExpense = () => {
   const { currency, rate } = useCurrency();
 
   useEffect(() => {
-    document.title = "Manage Expense • Expense Tracker";
+    document.title = "AequoPath • Manage Expense";
   }, []);
 
   const addCategory = async (categoryName) => {

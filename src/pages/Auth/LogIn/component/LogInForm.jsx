@@ -46,7 +46,7 @@ const LogInForm = () => {
           description: "Protected with token refresh flow.",
         },
       ]}
-      footerHint="New to ExpenseTracker?"
+      footerHint="New to AequoPath?"
       footerLinkText="Create an account"
       footerLinkTo="/signup"
       footerPrompt="Need a new start?"

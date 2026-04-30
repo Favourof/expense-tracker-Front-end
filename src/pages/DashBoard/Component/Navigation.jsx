@@ -53,8 +53,15 @@ const Navigation = () => {
               className="h-9 w-9 rounded-full object-cover"
             />
           )}
+          <button
+            type="button"
+            onClick={handleLogOut}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+            aria-label="Log out"
+          >
+            <FaSignOutAlt className="h-4 w-4" />
+          </button>
         </div>
-        <div className="h-6 w-6" />
       </div>
 
       <aside
@@ -63,7 +70,10 @@ const Navigation = () => {
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-xl bg-[#f47d4a]" />
           <div>
-            <p className="text-base font-semibold text-slate-900">ExpenseTracker</p>
+            <p className="text-base leading-none">
+              <span className="brand-name">Aequo</span>
+              <span className="brand-suffix">Path</span>
+            </p>
             <p className="text-xs text-slate-500">Nigeria-first money flow</p>
           </div>
         </div>
@@ -108,7 +118,6 @@ const Navigation = () => {
                     }`
                   }
                   end
-                  onClick={() => setIsMenuOpen(false)}
                 >
                   {({ isActive }) => (
                     <>
