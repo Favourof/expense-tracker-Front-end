@@ -20,8 +20,8 @@ const HeroPage = () => {
             Track spending. Grow savings. Feel in control.
           </h1>
           <p className="text-lg text-slate-700">
-            A clean, Nigeria-first expense tracker that turns daily spending into weekly clarity.
-            Manual today, bank-connected tomorrow.
+            A clean, Nigeria-first expense tracker that helps you log money quickly, spot patterns
+            early, and stay in control month after month.
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Button asChild>
@@ -41,7 +41,7 @@ const HeroPage = () => {
               <div>to see trends</div>
             </div>
             <div className="rounded-xl bg-white/80 p-3">
-              <div className="text-xl font-semibold text-slate-900">0 guess</div>
+              <div className="text-xl font-semibold text-slate-900">No guesswork</div>
               <div>on cash flow</div>
             </div>
           </div>

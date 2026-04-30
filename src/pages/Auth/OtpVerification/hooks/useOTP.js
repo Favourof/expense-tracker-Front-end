@@ -25,7 +25,7 @@ export const useOTP = () => {
         });
         if (res.data) {
          localStorage.removeItem('email')
-          navigate("/login");
+          navigate("/logIn");
         }
       } catch (error) {
         console.log(error);
