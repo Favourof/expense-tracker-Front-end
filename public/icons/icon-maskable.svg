@@ -1,5 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="128" fill="#0b3b2e"/>
-  <circle cx="256" cy="256" r="180" fill="#f47d4a"/>
-  <text x="50%" y="54%" text-anchor="middle" font-size="150" font-family="Arial, sans-serif" font-weight="700" fill="#ffffff">ET</text>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with professional rounded corners -->
+  <rect width="512" height="512" rx="120" fill="#1A3C2F"/>
+  
+  <!-- The Equilibrium Mark -->
+  <!-- Represents Income (Upward/Orange) and Expenses (Downward/White) -->
+  <path d="M160 352V224C160 188.654 188.654 160 224 160H288C323.346 160 352 188.654 352 224V352" 
+        stroke="#F48451" stroke-width="45" stroke-linecap="round" fill="none"/>
+  
+  <path d="M210 352H302" stroke="#FFFFFF" stroke-width="45" stroke-linecap="round"/>
+  
+  <!-- Subtle center node representing 'Net Balance' -->
+  <circle cx="256" cy="256" r="35" fill="#FFFFFF"/>
 </svg>
