@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getAccessToken, setAccessToken } from "./tokenStore";
 
-const baseURL = "https://expense-tracker-3-4g4l.onrender.com/api/v1";
+const baseURL = "http://localhost:4002/api/v1";
 
 export const publicRequest = axios.create({
   baseURL,

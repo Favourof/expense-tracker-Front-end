@@ -8,4 +8,17 @@
   body {
     @apply font-body text-slate-900 bg-[#f7f4ee];
   }
+
+  .brand-name {
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #1a3c2f;
+  }
+
+  .brand-suffix {
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    font-weight: 400;
+    color: #f48451;
+  }
 }

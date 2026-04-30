@@ -17,8 +17,11 @@ const FirstSection = () => {
       <div className="container flex items-center justify-between py-4">
         <Link to="/" className="flex items-center gap-2">
           {/* <div className="h-8 w-8 rounded-lg bg-[#f47d4a]" /> */}
-          <img className="h-8 w-8" src="/icons/icon.svg" alt="ExpenseTracker" />
-          <span className="text-lg font-semibold tracking-tight">ExpenseTracker</span>
+          <img className="h-8 w-8" src="/icons/icon.svg" alt="AequoPath" />
+          <span className="text-lg leading-none">
+            <span className="brand-name">Aequo</span>
+            <span className="brand-suffix">Path</span>
+          </span>
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-medium text-slate-700 md:flex">
           <a href="#features" className="hover:text-slate-900">Features</a>
