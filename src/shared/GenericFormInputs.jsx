@@ -1,8 +1,8 @@
 import {
-    FormField,
-    FormItem,
-    FormLabel,
-    FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
     FormDescription,
     FormMessage,
   } from "@/components/ui/form";
@@ -11,25 +11,29 @@ import {
     Select,
     SelectContent,
     SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select";
-  import { Textarea } from "@/components/ui/textarea";
-  
-  const GenericFormInputs = ({
-    form,
-    placeholder,
-    type,
-    label,
-    required,
-    description,
-    name,
-    options,
-  }) => {
-    switch (type) {
-      case "text":
-      case "password":
-      case "email":
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+
+const GenericFormInputs = ({
+  form,
+  placeholder,
+  type,
+  label,
+  required,
+  description,
+  name,
+  options,
+  itemClassName,
+  controlClassName,
+  labelClassName,
+}) => {
+  switch (type) {
+    case "text":
+    case "password":
+    case "email":
       case "number":
         return (
           <div>
@@ -37,13 +41,18 @@ import {
               control={form.control}
               name={name}
               render={({ field }) => (
-                <FormItem>
-                  <div>
-                    <FormLabel>{label}</FormLabel>
-                    {required && <span className="w-4 h-4 text-red-500">*</span>}
+                <FormItem className={cn("space-y-2", itemClassName)}>
+                  <div className="flex items-center gap-1">
+                    <FormLabel className={labelClassName}>{label}</FormLabel>
+                    {required && <span className="text-red-500">*</span>}
                   </div>
                   <FormControl>
-                    <Input type={type} placeholder={placeholder} {...field} />
+                    <Input
+                      type={type}
+                      placeholder={placeholder}
+                      className={controlClassName}
+                      {...field}
+                    />
                   </FormControl>
                   {description && (
                     <FormDescription>{description}</FormDescription>
@@ -61,12 +70,12 @@ import {
               control={form.control}
               name={name}
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{label}</FormLabel>
+                <FormItem className={cn("space-y-2", itemClassName)}>
+                  <FormLabel className={labelClassName}>{label}</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder={placeholder}
-                      className="resize-none"
+                      className={cn("resize-none", controlClassName)}
                       {...field}
                     />
                   </FormControl>
@@ -83,21 +92,21 @@ import {
           return (
             <div>
               <FormField
-                control={form.control}
-                name={name}
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <FormLabel>{label}</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder={placeholder} />
-                          </SelectTrigger>
-                        </FormControl>
+              control={form.control}
+              name={name}
+              render={({ field }) => {
+                return (
+                  <FormItem className={cn("space-y-2", itemClassName)}>
+                    <FormLabel className={labelClassName}>{label}</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className={controlClassName}>
+                          <SelectValue placeholder={placeholder} />
+                        </SelectTrigger>
+                      </FormControl>
                         <SelectContent>
                           {options?.map((opt, i) => {
                             return (

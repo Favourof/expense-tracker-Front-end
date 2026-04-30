@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 
+
 const FirstSection = () => {
   const { accessToken } = useAuth();
   const isLoggedIn = Boolean(accessToken);
@@ -9,13 +10,14 @@ const FirstSection = () => {
     <header className="border-b border-slate-200 bg-[#f7f4ee]">
       <div className="bg-[#0b3b2e] text-white">
         <div className="container flex items-center justify-between py-2 text-sm">
-          <p className="font-medium">Built for Nigeria. Manual tracking now, bank connections next.</p>
-          <span className="hidden sm:inline">Opay, PalmPay, Kuda, Moniepoint coming soon</span>
+          <p className="font-medium">Built for everyday money tracking in Nigeria.</p>
+          <span className="hidden sm:inline">Bank syncs and smarter automation are on the way</span>
         </div>
       </div>
       <div className="container flex items-center justify-between py-4">
         <Link to="/" className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-[#f47d4a]" />
+          {/* <div className="h-8 w-8 rounded-lg bg-[#f47d4a]" /> */}
+          <img className="h-8 w-8" src="/icons/icon.svg" alt="ExpenseTracker" />
           <span className="text-lg font-semibold tracking-tight">ExpenseTracker</span>
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-medium text-slate-700 md:flex">

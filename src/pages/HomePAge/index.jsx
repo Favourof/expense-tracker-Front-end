@@ -1,4 +1,3 @@
-import React from "react";
 import FirstSection from "./component/FirstSection";
 import SecondSection from "./component/SecondSection";
 import HeroPage from "./component/HeroPage";
@@ -11,7 +10,7 @@ import FooterSection from "./component/FooterSection";
 
 const HomePage = () => {
   return (
-    <div>
+    <main>
       <FirstSection />
       <HeroPage />
       <StatsSection />
@@ -21,7 +20,7 @@ const HomePage = () => {
       <IntegrationsSection />
       <CTASection />
       <FooterSection />
-    </div>
+    </main>
   );
 };
 
